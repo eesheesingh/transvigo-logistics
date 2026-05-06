@@ -14,6 +14,8 @@ import {
   Landmark,
   Leaf,
   MapPinned,
+  Mail,
+  MessageCircle,
   Package,
   Phone,
   Puzzle,
@@ -130,8 +132,22 @@ const navItems = [
   { label: 'Solutions', href: '#solutions' },
   { label: 'Industries', href: '#industries' },
   { label: 'Careers', href: '#careers' },
-  { label: 'Contact Us', href: '#contact' },
 ];
+
+/** WhatsApp-enabled mobile: country code + number, digits only (no + / spaces). Replace with yours. */
+const CONTACT_WHATSAPP_DIGITS = '919876543210';
+
+/** Shown in UI and used in mailto: — replace with your real inbox. */
+const CONTACT_EMAIL_DISPLAY = 'info@transvigo.com';
+
+const whatsappOpeningText = encodeURIComponent(
+  'Hi Transvigo, I would like to discuss logistics / 3PL requirements.',
+);
+
+const CONTACT_WHATSAPP_URL = `https://wa.me/${CONTACT_WHATSAPP_DIGITS}?text=${whatsappOpeningText}`;
+const CONTACT_MAILTO_URL = `mailto:${CONTACT_EMAIL_DISPLAY}?subject=${encodeURIComponent(
+  'Enquiry — Transvigo logistics',
+)}`;
 
 const solutions = [
   {
@@ -383,7 +399,7 @@ export default function App() {
               </a>
             ))}
             <a className="btn-quote" href="#contact" onClick={() => setMobileOpen(false)}>
-              GET A QUOTE
+              Contact Us
             </a>
           </div>
         </div>
@@ -406,6 +422,27 @@ export default function App() {
                 </a>
                 <a className="btn-outline-light" href="#about">
                   ABOUT US
+                </a>
+              </div>
+              <div className="hero__quickContact" role="navigation" aria-label="Reach Transvigo">
+                <a
+                  className="hero__quickLink hero__quickLink--wa"
+                  href={CONTACT_WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Chat with Transvigo on WhatsApp"
+                >
+                  <MessageCircle size={18} strokeWidth={2} aria-hidden /> WhatsApp
+                </a>
+                <span className="hero__quickSep" aria-hidden>
+                  ·
+                </span>
+                <a
+                  className="hero__quickLink hero__quickLink--mail"
+                  href={CONTACT_MAILTO_URL}
+                  aria-label={`Email Transvigo at ${CONTACT_EMAIL_DISPLAY}`}
+                >
+                  <Mail size={18} strokeWidth={2} aria-hidden /> Email
                 </a>
               </div>
               <div className="tagline-row hero__tagline">
@@ -681,6 +718,23 @@ export default function App() {
               <p className="contact__sub">
                 Speak with our team about warehousing, transportation, or a tailored program for your network.
               </p>
+              <div className="contact-direct">
+                <a
+                  href={CONTACT_WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-direct__btn contact-direct__btn--whatsapp"
+                >
+                  <MessageCircle size={21} strokeWidth={2} aria-hidden /> Message us on WhatsApp
+                </a>
+                <a href={CONTACT_MAILTO_URL} className="contact-direct__btn contact-direct__btn--email">
+                  <Mail size={21} strokeWidth={2} aria-hidden /> Email {CONTACT_EMAIL_DISPLAY}
+                </a>
+              </div>
+              <p className="contact-direct__hint">
+                Prefer a quick reply? Start on WhatsApp. For tenders or detailed briefs, use email or the callback
+                form.
+              </p>
               <div className="office-grid">
                 <div className="office-card">
                   <h4 className="office-card__head">
@@ -769,6 +823,21 @@ export default function App() {
                 </a>
               ))}
             </div>
+            <div className="footer__reachOut">
+              <a
+                className="footer__reachRow"
+                href={CONTACT_WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MessageCircle size={18} strokeWidth={2} aria-hidden />
+                WhatsApp chat
+              </a>
+              <a className="footer__reachRow" href={CONTACT_MAILTO_URL}>
+                <Mail size={18} strokeWidth={2} aria-hidden />
+                {CONTACT_EMAIL_DISPLAY}
+              </a>
+            </div>
           </div>
           <div>
             <h4>Solutions</h4>
@@ -810,6 +879,33 @@ export default function App() {
         </div>
         <div className="footer__bar container">© 2026 Transvigo – Moving Business Forward. All rights reserved.</div>
       </footer>
+
+      <aside className="contact-dock" aria-label="Quick contact">
+        <a
+          className="contact-dock__btn contact-dock__btn--wa"
+          href={CONTACT_WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open WhatsApp chat with Transvigo"
+        >
+          <MessageCircle size={22} strokeWidth={2} aria-hidden />
+          <span className="contact-dock__text">
+            <span className="contact-dock__title">WhatsApp</span>
+            <span className="contact-dock__hint">Fastest reply</span>
+          </span>
+        </a>
+        <a
+          className="contact-dock__btn contact-dock__btn--mail"
+          href={CONTACT_MAILTO_URL}
+          aria-label={`Send email to ${CONTACT_EMAIL_DISPLAY}`}
+        >
+          <Mail size={22} strokeWidth={2} aria-hidden />
+          <span className="contact-dock__text">
+            <span className="contact-dock__title">Email</span>
+            <span className="contact-dock__hint">{CONTACT_EMAIL_DISPLAY}</span>
+          </span>
+        </a>
+      </aside>
     </>
   );
 }

@@ -28,6 +28,12 @@ body {
   line-height: 1.6;
 }
 
+@media (max-width: 640px) {
+  body {
+    padding-bottom: calc(4.85rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -305,6 +311,56 @@ section {
   gap: 1rem;
   align-items: center;
   padding-top: 0.35rem;
+}
+
+.hero__quickContact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.75rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hero__quickLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgba(226, 244, 247, 0.98);
+  text-decoration: underline;
+  text-decoration-color: rgba(26, 139, 154, 0.55);
+  text-underline-offset: 4px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.hero__quickLink svg {
+  flex-shrink: 0;
+  opacity: 0.95;
+}
+
+.hero__quickLink:hover {
+  color: var(--white);
+  text-decoration-color: var(--green);
+}
+
+.hero__quickLink:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 4px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.hero__quickLink--wa:hover svg {
+  color: rgba(173, 240, 150, 0.98);
+}
+
+.hero__quickSep {
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 700;
+  user-select: none;
 }
 
 .hero__tagline.tagline-row {
@@ -1052,6 +1108,157 @@ section {
   padding-right: 1.25rem;
 }
 
+.contact-dock {
+  position: fixed;
+  z-index: 999;
+  display: flex;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.contact-dock > * {
+  pointer-events: auto;
+}
+
+.contact-dock__btn {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  text-align: left;
+  box-shadow: 0 10px 32px rgba(6, 14, 26, 0.28);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.contact-dock__btn:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
+}
+
+.contact-dock__btn:active {
+  transform: scale(0.98);
+}
+
+.contact-dock__btn svg {
+  flex-shrink: 0;
+}
+
+.contact-dock__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.contact-dock__title {
+  font-weight: 800;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.contact-dock__hint {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  opacity: 0.92;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact-dock__btn--wa {
+  flex: 1;
+  background: var(--green);
+  color: var(--white);
+}
+
+.contact-dock__btn--wa:hover {
+  background: #4d9428;
+  box-shadow: 0 12px 36px rgba(91, 173,47, 0.45);
+}
+
+.contact-dock__btn--mail {
+  flex: 1;
+  background: var(--white);
+  color: var(--navy);
+  border: 2px solid rgba(13,43,94, 0.12);
+}
+
+.contact-dock__btn--mail:hover {
+  border-color: var(--teal);
+  box-shadow:
+    0 12px 36px rgba(6,14,26, 0.2),
+    0 0 0 1px rgba(26, 139,154, 0.2);
+}
+
+@media (min-width: 641px) {
+  .contact-dock {
+    right: max(1rem, env(safe-area-inset-right, 0px));
+    bottom: max(1.1rem, env(safe-area-inset-bottom, 0px));
+    flex-direction: column;
+    align-items: stretch;
+    width: min(274px, calc(100vw - 2rem));
+  }
+
+  .contact-dock__btn {
+    flex: 0 0 auto;
+  }
+
+  .contact-dock__hint {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .contact-dock {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0.55rem max(1rem, env(safe-area-inset-right, 0px)) calc(0.55rem + env(safe-area-inset-bottom, 0px))
+      max(1rem, env(safe-area-inset-left, 0px));
+    background: linear-gradient(to top, rgba(6, 14,26, 0.97), rgba(8,27,62, 0.92));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255, 0.1);
+    box-shadow: 0 -16px 40px rgba(6,14,26, 0.35);
+  }
+
+  .contact-dock__btn {
+    min-height: 48px;
+    padding: 0.55rem 0.75rem;
+  }
+
+  .contact-dock__hint {
+    max-width: 38vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-dock__btn {
+    transition: none;
+  }
+
+  .contact-dock__btn:active {
+    transform: none;
+  }
+}
+
+@media print {
+  .contact-dock {
+    display: none;
+  }
+}
+
 .marquee-badge {
   flex-shrink: 0;
   background: var(--white);
@@ -1088,7 +1295,67 @@ section {
 
 .contact__sub {
   color: var(--muted);
+  margin-bottom: 1.25rem;
+}
+
+.contact-direct {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.contact-direct__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.9rem 1.35rem;
+  border-radius: 4px;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.contact-direct__btn svg {
+  flex-shrink: 0;
+}
+
+.contact-direct__btn--whatsapp {
+  background: var(--green);
+  color: var(--white);
+  box-shadow: 0 6px 22px rgba(91, 173, 47, 0.35);
+}
+
+.contact-direct__btn--whatsapp:hover {
+  background: #4d9428;
+  transform: var(--lift);
+}
+
+.contact-direct__btn--email {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  border: 2px solid var(--teal);
+}
+
+.contact-direct__btn--email:hover {
+  border-color: var(--green);
+  color: rgba(226, 240, 220, 0.98);
+  transform: var(--lift);
+}
+
+.contact-direct__hint {
+  margin-top: 0.85rem;
   margin-bottom: 2rem;
+  font-size: 0.88rem;
+  line-height: 1.52;
+  color: rgba(255, 255, 255, 0.73);
+  max-width: 40rem;
 }
 
 .office-grid {
@@ -1256,6 +1523,43 @@ section {
 .social:hover {
   background: var(--teal);
   border-color: var(--teal);
+}
+
+.footer__reachOut {
+  margin-top: 1.25rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.footer__reachOut h4 {
+  margin-bottom: 0.65rem;
+}
+
+.footer__reachRow {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.88rem;
+}
+
+.footer__reachRow:last-child {
+  margin-bottom: 0;
+}
+
+.footer__reachRow svg {
+  flex-shrink: 0;
+  color: var(--teal);
+}
+
+.footer__reachRow a {
+  color: var(--green);
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.footer__reachRow a:hover {
+  color: var(--teal);
 }
 
 .footer h4 {
