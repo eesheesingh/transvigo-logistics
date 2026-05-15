@@ -840,7 +840,7 @@ function Founder() {
                 Founder &amp; Managing Director
               </div>
               <div className="text-base font-extrabold text-navy-900">
-                TransVigo Logistics
+                Raman Sehrawat
               </div>
             </div>
           </div>
