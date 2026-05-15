@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView, MotionConfig } from "framer-motion";
 import {
   ArrowRight,
   BadgeCheck,
@@ -1131,24 +1132,45 @@ function ContactDock() {
   );
 }
 
+function Reveal({ children, y = 60, delay = 0, duration = 0.85 }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, {
+    once: true,
+    amount: 0.12,
+    margin: "0px 0px -10% 0px",
+  });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y }}
+      transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 export default function App() {
   return (
-    <div className="bg-white text-navy-900 min-h-screen">
-      <Nav />
-      <Hero />
-      <PartnersMarquee />
-      <About />
-      <Services />
-      <Fleet />
-      <Routes />
-      <StatsBand />
-      <Capabilities />
-      <Process />
-      <Industries />
-      <Founder />
-      <Contact />
-      <Footer />
-      <ContactDock />
-    </div>
+    <MotionConfig reducedMotion="never">
+      <div className="bg-white text-navy-900 min-h-screen">
+        <Nav />
+          <Reveal y={0} duration={0.9}><Hero /></Reveal>
+        <Reveal><PartnersMarquee /></Reveal>
+        <Reveal><About /></Reveal>
+        <Reveal><Services /></Reveal>
+        <Reveal><Fleet /></Reveal>
+        <Reveal><Routes /></Reveal>
+        <Reveal><StatsBand /></Reveal>
+        <Reveal><Capabilities /></Reveal>
+        <Reveal><Process /></Reveal>
+        <Reveal><Industries /></Reveal>
+        <Reveal><Founder /></Reveal>
+        <Reveal><Contact /></Reveal>
+        <Reveal><Footer /></Reveal>
+        <ContactDock />
+      </div>
+    </MotionConfig>
   );
 }
