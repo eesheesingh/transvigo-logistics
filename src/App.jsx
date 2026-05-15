@@ -1,911 +1,1154 @@
-import { useState, useEffect, useId, Fragment, useRef, useCallback } from 'react';
+import { useEffect, useState } from "react";
 import {
-  Armchair,
+  ArrowRight,
   BadgeCheck,
   Boxes,
-  Box,
   Building2,
-  BriefcaseMedical,
-  Car,
-  Cpu,
+  CheckCircle2,
+  ClipboardList,
+  Compass,
   Factory,
-  FlaskConical,
+  Fuel,
+  Gauge,
   Globe2,
-  Landmark,
-  Leaf,
-  MapPinned,
+  Headphones,
+  Layers,
   Mail,
+  MapPin,
   MessageCircle,
+  Navigation,
   Package,
+  PackageCheck,
   Phone,
-  Puzzle,
-  Send,
-  Shirt,
+  Quote,
+  Radar,
+  Route,
+  ShieldCheck,
   ShoppingBag,
-  ShoppingCart,
   Stethoscope,
+  Timer,
   Truck,
-  Users,
-  UsersRound,
-  UtensilsCrossed,
   Warehouse,
-} from 'lucide-react';
-import './App.css';
+  Wrench,
+  Zap,
+} from "lucide-react";
 
-function IconX({ size = 18, className }) {
+const WHATSAPP_DIGITS = "919876543210";
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_DIGITS}?text=${encodeURIComponent(
+  "Hi TransVigo, I'd like to discuss fleet / line-haul requirements."
+)}`;
+const EMAIL = "info@transvigo.com";
+const MAILTO = `mailto:${EMAIL}?subject=${encodeURIComponent(
+  "Enquiry — TransVigo Logistics"
+)}`;
+
+const navLinks = [
+  { label: "Services", href: "#services" },
+  { label: "Fleet", href: "#fleet" },
+  { label: "Network", href: "#routes" },
+  { label: "Process", href: "#process" },
+  { label: "Industries", href: "#industries" },
+  { label: "Founder", href: "#founder" },
+  { label: "Contact", href: "#contact" },
+];
+
+const heroStats = [
+  ["200+", "GPS-Enabled Vehicles"],
+  ["20+", "Years Experience"],
+  ["24×7", "Fleet Monitoring"],
+  ["Pan-India", "Operational Reach"],
+];
+
+const services = [
+  {
+    title: "Line Haul (FTL) Operations",
+    text: "Dedicated full-truckload movement across major industrial corridors with assured placement.",
+    Icon: Truck,
+  },
+  {
+    title: "Inter-Hub Transportation",
+    text: "Scheduled hub-to-hub linehaul connecting warehouses, DCs and sorting centers.",
+    Icon: Route,
+  },
+  {
+    title: "Dedicated Fleet Deployment",
+    text: "Captive vehicles on fixed lanes — predictable capacity, consistent crews, your KPIs.",
+    Icon: Layers,
+  },
+  {
+    title: "Factory Dispatch Support",
+    text: "Plant-side vehicle planning, gate-in/gate-out discipline, and on-time dispatch.",
+    Icon: Factory,
+  },
+  {
+    title: "Peak Load Capacity Support",
+    text: "Surge fleet on tap during festive, seasonal or end-of-month dispatch peaks.",
+    Icon: Zap,
+  },
+  {
+    title: "Feeder Route Operations",
+    text: "Short-haul connectivity feeding your line-haul, e-commerce and 3PL networks.",
+    Icon: Navigation,
+  },
+];
+
+const fleet = [
+  { type: "32 ft Single Axle", capacity: "9–10 T", body: "Container / SXL", Icon: Truck },
+  { type: "32 ft Multi Axle", capacity: "14–18 T", body: "Container / MXL", Icon: Truck },
+  { type: "24 ft Container", capacity: "7–8 T", body: "Closed Body", Icon: Truck },
+  { type: "20 ft Container", capacity: "6–7 T", body: "Closed Body", Icon: Truck },
+  { type: "17 ft Open Body", capacity: "5 T", body: "Open / Tarp", Icon: Truck },
+  { type: "14 ft / 1109", capacity: "3.5–4 T", body: "Closed Body", Icon: Truck },
+  { type: "Tata Ace / Pickup", capacity: "<1 T", body: "Last Mile", Icon: Truck },
+  { type: "Trailer (40 ft)", capacity: "20–25 T", body: "Project Cargo", Icon: Truck },
+];
+
+const capabilities = [
+  { title: "Live GPS Tracking", text: "Real-time vehicle visibility with geofence & ETA alerts.", Icon: Radar },
+  { title: "24×7 Control Tower", text: "Dedicated dispatch desk, exception handling, escalation matrix.", Icon: Headphones },
+  { title: "E-Way Bill & Compliance", text: "End-to-end EWB, FASTag, RC/PUC adherence on every trip.", Icon: ShieldCheck },
+  { title: "ePOD & Digital Documents", text: "Digital proof-of-delivery, signed challans, instant share.", Icon: ClipboardList },
+];
+
+const corridors = [
+  // dx, dy from center hub; values are normalized for an 800x800 svg with hub at (400,400)
+  { name: "Mumbai", code: "BOM", dx: -180, dy: 220, distance: "1,400 km" },
+  { name: "Ahmedabad", code: "AMD", dx: -260, dy: 80, distance: "950 km" },
+  { name: "Surat", code: "STV", dx: -230, dy: 170, distance: "1,160 km" },
+  { name: "Pune", code: "PNQ", dx: -150, dy: 260, distance: "1,450 km" },
+  { name: "Bengaluru", code: "BLR", dx: -60, dy: 320, distance: "2,100 km" },
+  { name: "Hyderabad", code: "HYD", dx: 30, dy: 250, distance: "1,500 km" },
+  { name: "Kolkata", code: "CCU", dx: 280, dy: 70, distance: "1,500 km" },
+  { name: "Lucknow", code: "LKO", dx: 180, dy: -40, distance: "550 km" },
+  { name: "Jaipur", code: "JAI", dx: -160, dy: -10, distance: "270 km" },
+  { name: "Chandigarh", code: "IXC", dx: 30, dy: -160, distance: "250 km" },
+];
+
+const process = [
+  { step: "01", title: "Request a Vehicle", text: "Share lane, load type and timeline — get a quote within hours.", Icon: ClipboardList },
+  { step: "02", title: "Vehicle Allotted", text: "Verified vehicle + driver assigned with compliant documents.", Icon: Truck },
+  { step: "03", title: "Live Tracking", text: "Real-time GPS visibility from pickup to drop with proactive alerts.", Icon: Radar },
+  { step: "04", title: "On-Time Delivery", text: "Digital POD, gate-out timestamp and closing checklist on delivery.", Icon: PackageCheck },
+];
+
+const industries = [
+  { label: "FMCG", Icon: ShoppingBag },
+  { label: "Manufacturing", Icon: Factory },
+  { label: "E-Commerce", Icon: Boxes },
+  { label: "Pharma & Healthcare", Icon: Stethoscope },
+  { label: "Automotive", Icon: Wrench },
+  { label: "Warehousing & 3PL", Icon: Warehouse },
+  { label: "Chemicals & Lubes", Icon: Fuel },
+  { label: "Retail & D2C", Icon: Package },
+];
+
+const partners = [
+  "Reliance",
+  "Tata Steel",
+  "Asian Paints",
+  "Hindustan Unilever",
+  "ITC",
+  "Maruti Suzuki",
+  "Mondelez",
+  "Bosch",
+  "Castrol",
+  "JK Tyre",
+  "Dabur",
+  "Britannia",
+];
+
+function Logo({ inverse = false }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}
-
-function IconLinkedin({ size = 18, className }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-    </svg>
-  );
-}
-
-function IconYoutube({ size = 18, className }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
-      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-    </svg>
-  );
-}
-
-function IconInstagram({ size = 18, className }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
-      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 7.058 7.058 1.28.058 1.689.073 4.948.073 3.259 0 3.668-.014 4.948-.072 4.357-.276 6.884-2.694 7.068-7.069.058-1.28.073-1.689.073-4.949 0-3.259-.014-3.667-.073-4.947-.277-4.376-2.705-6.798-7.069-7.067-1.28-.058-1.689-.074-4.948-.074zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a3.993 3.993 0 1 1 4-3.993 4.003 4.003 0 0 1-4 4.017zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" />
-    </svg>
-  );
-}
-
-/**
- * Navbar over dark hero uses an SVG-masked WHITE fill derived from logo.jpeg so the lockup reads as pure white,
- * without the colour JPEG sitting on navy. Footer / scrolled bar use the full-colour JPEG.
- */
-function Logo({ variant = 'solid' }) {
-  const uid = useId().replace(/:/g, '');
-  const filtId = `logoInv-${uid}`;
-  const maskId = `logoMask-${uid}`;
-
-  if (variant === 'transparent') {
-    return (
-      <a href="#home" className="logo-link logo-link--transparentNav">
-        <svg
-          className="logo-link__svgWhite"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlnsXlink="http://www.w3.org/1999/xlink"
-          viewBox="0 0 288 76"
-          role="img"
-          aria-label="Transvigo — Moving Business Forward"
-        >
-          <defs>
-            <filter id={filtId} colorInterpolationFilters="sRGB">
-              <feColorMatrix
-                type="matrix"
-                values="-1 0 0 0 1  
-                        0 -1 0 0 1  
-                        0 0 -1 0 1  
-                        0 0 0 1 0"
-              />
-            </filter>
-            <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="288" height="76">
-              <image
-                xlinkHref="/logo.jpeg"
-                href="/logo.jpeg"
-                width="288"
-                height="76"
-                preserveAspectRatio="xMidYMid meet"
-                filter={`url(#${filtId})`}
-              />
-            </mask>
-          </defs>
-          <rect width="288" height="76" fill="#ffffff" mask={`url(#${maskId})`} />
-        </svg>
-      </a>
-    );
-  }
-
-  const barClass =
-    variant === 'footer' ? 'logo-link logo-link--footerEmbed' : 'logo-link logo-link--solidNav';
-
-  return (
-    <a href="#home" className={barClass}>
+    <a href="#home" className="flex items-center group shrink-0" aria-label="TransVigo Logistics — Home">
       <img
-        src="/logo.jpeg"
-        alt="Transvigo — Moving Business Forward"
-        className="logo-link__img"
-        decoding="async"
+        src="/logo.png"
+        alt="TransVigo Logistics"
+        className={`h-11 w-auto select-none ${
+          inverse
+            ? "[filter:brightness(0)_invert(1)]"
+            : "[mix-blend-mode:multiply]"
+        }`}
+        draggable={false}
       />
     </a>
   );
 }
 
-const navItems = [
-  { label: 'Home', href: '#home' },
-  { label: 'About Us', href: '#about' },
-  { label: 'Solutions', href: '#solutions' },
-  { label: 'Industries', href: '#industries' },
-  { label: 'Careers', href: '#careers' },
-];
-
-/** WhatsApp-enabled mobile: country code + number, digits only (no + / spaces). Replace with yours. */
-const CONTACT_WHATSAPP_DIGITS = '919876543210';
-
-/** Shown in UI and used in mailto: — replace with your real inbox. */
-const CONTACT_EMAIL_DISPLAY = 'info@transvigo.com';
-
-const whatsappOpeningText = encodeURIComponent(
-  'Hi Transvigo, I would like to discuss logistics / 3PL requirements.',
-);
-
-const CONTACT_WHATSAPP_URL = `https://wa.me/${CONTACT_WHATSAPP_DIGITS}?text=${whatsappOpeningText}`;
-const CONTACT_MAILTO_URL = `mailto:${CONTACT_EMAIL_DISPLAY}?subject=${encodeURIComponent(
-  'Enquiry — Transvigo logistics',
-)}`;
-
-const solutions = [
-  {
-    title: 'Warehousing & Distribution',
-    text: 'Nationwide storage, inventory control, and fulfillment tuned to your SLAs.',
-    Icon: Warehouse,
-  },
-  {
-    title: 'Transportation Solutions',
-    text: 'Full-truck, multi-modal, and last-mile programs with transparent tracking.',
-    Icon: Truck,
-  },
-  {
-    title: 'In-Plant Logistics',
-    text: 'Streamlined material flow inside your facilities for higher throughput.',
-    Icon: Factory,
-  },
-  {
-    title: 'E-Commerce & D2C Fulfillment',
-    text: 'Fast picks, reliable dispatch, and returns handling for digital brands.',
-    Icon: ShoppingCart,
-  },
-  {
-    title: 'Pharma & Healthcare Logistics',
-    text: 'Temperature integrity, compliance discipline, and audit-ready processes.',
-    Icon: Stethoscope,
-  },
-  {
-    title: 'Value-Added Services',
-    text: 'Kitting, labelling, QC, and custom packaging at scale.',
-    Icon: Puzzle,
-  },
-  {
-    title: 'Tech-Enabled Solutions',
-    text: 'Visibility, analytics, and automation embedded across the network.',
-    Icon: Cpu,
-  },
-  {
-    title: 'Built-to-Suit Logistics Parks',
-    text: 'Purpose-designed facilities aligned to your growth roadmap.',
-    Icon: Building2,
-  },
-];
-
-const industries = [
-  { label: 'FMCG', Icon: ShoppingBag },
-  { label: 'Food & Grocery', Icon: UtensilsCrossed },
-  { label: 'Fashion & Lifestyle', Icon: Shirt },
-  { label: 'Chemicals & Paints', Icon: FlaskConical },
-  { label: 'Automotive', Icon: Car },
-  { label: 'Consumer Durables', Icon: Armchair },
-  { label: 'Healthcare & Pharma', Icon: BriefcaseMedical },
-];
-
-const whyItems = [
-  {
-    title: 'Pan-India Network',
-    short: 'Coverage that keeps pace with your markets.',
-    Icon: MapPinned,
-    body: 'A dense footprint across 28 states with consistent operating playbooks, so your supply chain stays predictable from metros to emerging hubs.',
-  },
-  {
-    title: 'Digital Excellence',
-    short: 'Real-time visibility and smarter decisions.',
-    Icon: Cpu,
-    body: 'Integrated control towers, milestone tracking, and analytics help teams resolve exceptions faster and plan with confidence.',
-  },
-  {
-    title: 'Global Standards',
-    short: 'Processes benchmarked for quality and safety.',
-    Icon: BadgeCheck,
-    body: 'Rigorous SOPs, trained teams, and governance models aligned to international expectations for premium brand partners.',
-  },
-  {
-    title: 'Multi-Sector Expertise',
-    short: 'Depth across complex categories.',
-    Icon: Boxes,
-    body: 'From regulated pharma to high-velocity FMCG, we apply sector-specific know-how without compromising speed or compliance.',
-  },
-  {
-    title: 'Empowered Teams',
-    short: 'People who own your outcomes.',
-    Icon: UsersRound,
-    body: '5,000+ professionals focused on service reliability, continuous improvement, and accountable partnership at every site.',
-  },
-  {
-    title: 'ESG Commitment',
-    short: 'Responsible operations, measurable progress.',
-    Icon: Leaf,
-    body: 'Energy-conscious infrastructure, waste reduction, and safer workplaces embedded into how we run every program.',
-  },
-];
-
-const statRows = [
-  { num: '2005', label: 'Founded', Icon: Landmark },
-  { num: '7M+', label: 'Cases / Month', Icon: Box },
-  { num: '13M+', label: 'Pieces / Month', Icon: Package },
-  { num: '140+', label: 'Sites', Icon: MapPinned },
-  { num: '5,000+', label: 'Employees', Icon: Users },
-  { num: '28', label: 'States', Icon: Globe2 },
-];
-
-const socialLinks = [
-  { href: '#', label: 'LinkedIn', Icon: IconLinkedin },
-  { href: '#', label: 'X', Icon: IconX },
-  { href: '#', label: 'YouTube', Icon: IconYoutube },
-  { href: '#', label: 'Instagram', Icon: IconInstagram },
-];
-
-const testimonials = [
-  {
-    quote:
-      'Transvigo brought discipline and transparency to our national distribution. Their team operates like an extension of ours.',
-    initial: 'A',
-    name: 'Ananya Mehta',
-    role: 'Head of Supply Chain',
-    company: 'Leading FMCG Brand',
-  },
-  {
-    quote: 'From inbound quality checks to on-time retail replenishment, the network has been rock solid through peak seasons.',
-    initial: 'R',
-    name: 'Rahul Verma',
-    role: 'Director — Logistics',
-    company: 'Consumer Durables Major',
-  },
-  {
-    quote: 'We needed a partner who could scale with our D2C surge. Transvigo delivered speed, accuracy, and clear communication.',
-    initial: 'S',
-    name: 'Sneha Kulkarni',
-    role: 'VP Operations',
-    company: 'Digital-First Retailer',
-  },
-];
-
-const clients = [
-  'P&G',
-  'Haleon',
-  'Mondelez',
-  'Modicare',
-  'JK Tyre',
-  'Reliance Digital',
-  'Asian Paints',
-  'Colgate',
-  'Abbott',
-  'Bosch',
-  'Siemens',
-  'Castrol',
-  'Shoppers Stop',
-  'Aditya Birla',
-];
-
-export default function App() {
+function Nav() {
   const [scrolled, setScrolled] = useState(false);
-  const [selectedWhy, setSelectedWhy] = useState(0);
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const whySectionRef = useRef(null);
-  const whyAutoTimerRef = useRef(null);
-  const whyManualPauseUntilRef = useRef(0);
-
-  const advanceWhyTick = useCallback(() => {
-    if (whyManualPauseUntilRef.current > Date.now()) return;
-    setSelectedWhy((i) => (i + 1) % whyItems.length);
-  }, []);
-
-  const clearWhyAutoAdvance = useCallback(() => {
-    if (whyAutoTimerRef.current != null) {
-      window.clearInterval(whyAutoTimerRef.current);
-      whyAutoTimerRef.current = null;
-    }
-  }, []);
-
-  useEffect(() => {
-    const el = whySectionRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') return undefined;
-
-    const reduceMotion =
-      typeof window.matchMedia !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (reduceMotion) return undefined;
-
-    const startAdvance = () => {
-      if (whyAutoTimerRef.current != null) return;
-      whyAutoTimerRef.current = window.setInterval(advanceWhyTick, 4600);
-    };
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.some((e) => e.isIntersecting && e.intersectionRatio >= 0.28);
-        if (visible) {
-          startAdvance();
-        } else {
-          clearWhyAutoAdvance();
-        }
-      },
-      { threshold: [0, 0.15, 0.28, 0.45, 0.6] },
-    );
-
-    obs.observe(el);
-    return () => {
-      obs.disconnect();
-      clearWhyAutoAdvance();
-    };
-  }, [advanceWhyTick, clearWhyAutoAdvance]);
-
-  const handleWhyPillarSelect = useCallback((idx) => {
-    whyManualPauseUntilRef.current = Date.now() + 14000;
-    setSelectedWhy(idx);
-  }, []);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    if (!mobileOpen) return undefined;
-    const close = () => setMobileOpen(false);
-    window.addEventListener('scroll', close, { passive: true });
-    return () => window.removeEventListener('scroll', close);
-  }, [mobileOpen]);
-
-  const progress = ((selectedWhy + 1) / whyItems.length) * 100;
-  const WhyDetailIcon = whyItems[selectedWhy].Icon;
-
+  const inverse = !scrolled;
   return (
-    <>
-      <header className={`nav ${scrolled ? 'nav--solid' : 'nav--transparent'}`}>
-        <div className="container nav__inner">
-          <Logo variant={scrolled ? 'solid' : 'transparent'} />
-          <button
-            type="button"
-            className="nav__burger"
-            aria-expanded={mobileOpen}
-            aria-label="Menu"
-            onClick={() => setMobileOpen((o) => !o)}
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-all ${
+        scrolled
+          ? "bg-white/95 backdrop-blur-md shadow-[0_1px_0_rgba(10,34,64,0.06)]"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
+        <Logo inverse={inverse} />
+        <nav className="hidden lg:flex items-center gap-8">
+          {navLinks.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className={`text-sm font-semibold tracking-wide transition ${
+                inverse ? "text-white/85 hover:text-lime-400" : "text-navy-700 hover:text-teal-600"
+              }`}
+            >
+              {l.label}
+            </a>
+          ))}
+          <a
+            href="#contact"
+            className="inline-flex items-center gap-2 bg-lime-500 hover:bg-lime-400 transition text-navy-900 font-bold text-sm px-5 py-2.5 rounded-full shadow-soft"
           >
-            <span />
-            <span />
-            <span />
-          </button>
-          <div className={`nav__links ${mobileOpen ? 'nav__links--open' : ''}`}>
-            {navItems.map((item) => (
-              <a key={item.href} className="nav__link" href={item.href} onClick={() => setMobileOpen(false)}>
-                {item.label}
-              </a>
-            ))}
-            <a className="btn-quote" href="#contact" onClick={() => setMobileOpen(false)}>
-              Contact Us
+            Get a Quote <ArrowRight size={16} strokeWidth={2.6} />
+          </a>
+        </nav>
+        <button
+          aria-label="Menu"
+          onClick={() => setOpen((o) => !o)}
+          className={`lg:hidden h-10 w-10 rounded-lg grid place-items-center border ${
+            inverse ? "border-white/30 text-white" : "border-navy-200 text-navy-800"
+          }`}
+        >
+          <div className="space-y-1.5">
+            <span className={`block h-0.5 w-5 ${inverse ? "bg-white" : "bg-navy-800"}`} />
+            <span className={`block h-0.5 w-5 ${inverse ? "bg-white" : "bg-navy-800"}`} />
+            <span className={`block h-0.5 w-5 ${inverse ? "bg-white" : "bg-navy-800"}`} />
+          </div>
+        </button>
+      </div>
+      {open && (
+        <div className="lg:hidden bg-white border-t border-navy-100 px-6 py-5 space-y-3 shadow-lg">
+          {navLinks.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setOpen(false)}
+              className="block text-navy-800 font-semibold py-1"
+            >
+              {l.label}
+            </a>
+          ))}
+          <a
+            href="#contact"
+            onClick={() => setOpen(false)}
+            className="inline-flex items-center gap-2 bg-lime-500 text-navy-900 font-bold text-sm px-5 py-2.5 rounded-full"
+          >
+            Get a Quote <ArrowRight size={16} />
+          </a>
+        </div>
+      )}
+    </header>
+  );
+}
+
+function Hero() {
+  return (
+    <section
+      id="home"
+      className="relative overflow-hidden text-white pt-10 min-h-[760px]"
+    >
+      {/* Truck background image */}
+      <img
+        src="/transvigo%20truck.jpeg"
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-cover object-center"
+        draggable={false}
+      />
+      {/* Dark navy overlay — heavy on left for text legibility, lighter on right so truck shows */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(100deg, rgba(8,37,68,0.96) 0%, rgba(14,53,89,0.86) 38%, rgba(20,60,97,0.5) 72%, rgba(20,60,97,0.35) 100%)",
+        }}
+      />
+      {/* Subtle grid + brand-color glows preserved on top */}
+      <div className="absolute inset-0 bg-grid opacity-25 pointer-events-none" />
+      <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-teal-500/15 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 -left-32 w-[500px] h-[500px] rounded-full bg-lime-500/15 blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-20 grid lg:grid-cols-12 gap-12 items-center">
+        <div className="lg:col-span-7">
+          <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 text-xs sm:text-sm font-medium tracking-wide">
+            <span className="relative grid place-items-center">
+              <span className="absolute inset-0 rounded-full bg-lime-400 animate-ping2" />
+              <span className="w-2 h-2 rounded-full bg-lime-400 relative" />
+            </span>
+            NCR-Based Fleet Operator · Pan-India Linehaul
+          </div>
+          <h1 className="mt-8 text-5xl sm:text-6xl lg:text-7xl leading-[1.02] font-extrabold tracking-tight drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]">
+            Dedicated Fleet
+            <br />
+            <span className="bg-gradient-to-r from-teal-400 via-forest-400 to-lime-400 bg-clip-text text-transparent">
+              Operations
+            </span>{" "}
+            Across India
+          </h1>
+          <p className="mt-7 text-lg sm:text-xl leading-9 text-white/85 max-w-2xl">
+            TransVigo Logistics delivers disciplined line-haul movement, fixed-lane fleet deployment,
+            inter-hub transportation and time-bound dispatch across major industrial corridors.
+          </p>
+          <div className="mt-9 flex flex-wrap gap-4">
+            <a
+              href="#contact"
+              className="group inline-flex items-center gap-2 bg-lime-500 hover:bg-lime-400 transition text-navy-900 font-bold px-7 py-4 rounded-2xl text-base shadow-2xl"
+            >
+              Get Freight Quote
+              <ArrowRight size={18} strokeWidth={2.6} className="group-hover:translate-x-0.5 transition" />
+            </a>
+            <a
+              href="#fleet"
+              className="inline-flex items-center gap-2 border border-white/30 hover:bg-white/10 backdrop-blur transition px-7 py-4 rounded-2xl text-base font-semibold"
+            >
+              Attach Your Vehicle
             </a>
           </div>
-        </div>
-      </header>
-
-      <main>
-        <section id="home" className="hero">
-          <div className="hero__backdrop" aria-hidden="true" />
-          <div className="container hero__layout">
-            <div className="hero__panel">
-              <span className="badge hero__badge">India&apos;s Trusted 3PL Partner</span>
-              <h1>Logistics Solutions Engineered for Excellence</h1>
-              <p className="hero__sub">
-                Transvigo delivers integrated warehousing, transportation, and value-added services with the
-                reliability global enterprises expect and the agility modern brands require.
-              </p>
-              <div className="hero__actions">
-                <a className="btn-primary" href="#solutions">
-                  OUR SERVICES →
-                </a>
-                <a className="btn-outline-light" href="#about">
-                  ABOUT US
-                </a>
-              </div>
-              <div className="hero__quickContact" role="navigation" aria-label="Reach Transvigo">
-                <a
-                  className="hero__quickLink hero__quickLink--wa"
-                  href={CONTACT_WHATSAPP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Chat with Transvigo on WhatsApp"
-                >
-                  <MessageCircle size={18} strokeWidth={2} aria-hidden /> WhatsApp
-                </a>
-                <span className="hero__quickSep" aria-hidden>
-                  ·
-                </span>
-                <a
-                  className="hero__quickLink hero__quickLink--mail"
-                  href={CONTACT_MAILTO_URL}
-                  aria-label={`Email Transvigo at ${CONTACT_EMAIL_DISPLAY}`}
-                >
-                  <Mail size={18} strokeWidth={2} aria-hidden /> Email
-                </a>
-              </div>
-              <div className="tagline-row hero__tagline">
-                <span className="tagline-row__line" aria-hidden="true" />
-                <span className="tagline-row__text">Moving Business Forward</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <div className="stats">
-          <div className="container stats__row">
-            {statRows.map((row, i, arr) => {
-              const StatIcon = row.Icon;
-              return (
-                <Fragment key={row.label}>
-                  <div className="stat-item">
-                    <span className="stat-item__icon" aria-hidden>
-                      <StatIcon size={22} strokeWidth={2} />
-                    </span>
-                    <span className="stat-item__num">{row.num}</span>
-                    <span className="stat-item__label">{row.label}</span>
-                  </div>
-                  {i < arr.length - 1 && <span className="stat-divider" aria-hidden="true" />}
-                </Fragment>
-              );
-            })}
+          <div className="mt-12 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-white/80">
+            <span className="inline-flex items-center gap-2"><CheckCircle2 size={16} className="text-lime-400" /> GPS on every trip</span>
+            <span className="inline-flex items-center gap-2"><CheckCircle2 size={16} className="text-lime-400" /> EWB &amp; FASTag compliant</span>
+            <span className="inline-flex items-center gap-2"><CheckCircle2 size={16} className="text-lime-400" /> On-time placement SLAs</span>
           </div>
         </div>
 
-        <section id="solutions" className="solutions">
-          <div className="container">
-            <p className="section-label">What We Deliver</p>
-            <h2>Solutions Built Around Your Supply Chain</h2>
-            <div className="card-grid-4">
-              {solutions.map((c) => {
-                const SIcon = c.Icon;
-                return (
-                  <article key={c.title} className="solution-card">
-                    <div className="solution-card__iconWrap" aria-hidden>
-                      <SIcon size={26} strokeWidth={2} />
-                    </div>
-                    <h3>{c.title}</h3>
-                    <p>{c.text}</p>
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        <section id="about" className="about">
-          <div className="container about__grid">
-            <div className="about-visual">
-              <div className="about-visual__iconSlot" aria-hidden="true">
-                <Warehouse size={40} strokeWidth={2} />
-              </div>
-              <h3>20+ Years of Excellence</h3>
-              <p className="about-visual__text">
-                From single-site programs to pan-India networks, we scale with purpose—keeping inventory accurate,
-                costs visible, and service levels protected.
-              </p>
-              <div className="float-stat">
-                200+
-                <span>Happy Clients</span>
-              </div>
+        {/* Right column — floating trust cards over the truck */}
+        <div className="lg:col-span-5 relative min-h-[320px] hidden lg:block">
+          <div className="absolute top-4 right-0 bg-white/95 backdrop-blur text-navy-900 rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3 animate-floaty">
+            <div className="h-10 w-10 rounded-xl bg-teal-500/15 text-teal-600 grid place-items-center">
+              <ShieldCheck size={20} />
             </div>
             <div>
-              <p className="section-label">Who We Are</p>
-              <h2
-                style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontWeight: 900,
-                  fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-                  marginBottom: '1.25rem',
-                }}
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-navy-500">EWB · FASTag</div>
+              <div className="text-sm font-bold">100% Compliant</div>
+            </div>
+          </div>
+
+          <div className="absolute top-32 right-12 bg-white/95 backdrop-blur text-navy-900 rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3 w-[250px]" style={{ animation: "floaty 5s ease-in-out infinite", animationDelay: "0.6s" }}>
+            <div className="h-10 w-10 rounded-xl bg-lime-500/15 text-lime-600 grid place-items-center">
+              <Radar size={20} />
+            </div>
+            <div>
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-navy-500">Live Tracking</div>
+              <div className="text-sm font-bold">NCR → Mumbai · ETA 28h</div>
+            </div>
+          </div>
+
+          <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur text-navy-900 rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3 animate-floaty" style={{ animationDelay: "1.2s" }}>
+            <div className="h-10 w-10 rounded-xl bg-navy-100 text-navy-700 grid place-items-center">
+              <Truck size={20} />
+            </div>
+            <div>
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-navy-500">Owned Fleet</div>
+              <div className="text-sm font-bold">HR55AV0024</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Hero stats row */}
+        <div className="lg:col-span-12 mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+          {heroStats.map(([num, label]) => (
+            <div
+              key={label}
+              className="bg-white/10 backdrop-blur-xl border border-white/15 px-5 py-5 rounded-2xl"
+            >
+              <div className="text-3xl font-extrabold bg-gradient-to-r from-teal-400 via-forest-400 to-lime-400 bg-clip-text text-transparent">
+                {num}
+              </div>
+              <div className="mt-1.5 text-sm text-white/75">{label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PartnersMarquee() {
+  return (
+    <section className="bg-white border-y border-navy-100 py-7">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="text-xs uppercase tracking-[0.28em] font-bold text-navy-400 text-center mb-5">
+          Trusted by industrial leaders across India
+        </div>
+        <div className="fade-mask overflow-hidden">
+          <div className="flex gap-12 animate-marquee w-max">
+            {[...partners, ...partners].map((p, i) => (
+              <span
+                key={`${p}-${i}`}
+                className="text-navy-700/70 hover:text-navy-800 transition font-bold text-lg tracking-wider whitespace-nowrap"
               >
-                Transvigo — Your Growth Partner
-              </h2>
-              <p style={{ marginBottom: '1rem', color: 'var(--muted-dark)' }}>
-                Transvigo is a full-spectrum third-party logistics partner trusted by leading brands across FMCG,
-                healthcare, durables, and retail. We combine disciplined execution with digital tools so your teams
-                spend less time chasing updates and more time serving customers.
-              </p>
-              <p style={{ marginBottom: '1.5rem', color: 'var(--muted-dark)' }}>
-                With 10M+ square feet under management and a relentless focus on safety, accuracy, and sustainability,
-                we help you expand distribution, enter new regions, and respond to demand with confidence.
-              </p>
-              <div className="about-stats-mini">
-                <div className="mini-stat">
-                  <strong>10M+ Sq ft</strong>
-                  <span>Warehouse footprint</span>
+                {p.toUpperCase()}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function About() {
+  return (
+    <section id="about" className="max-w-7xl mx-auto px-6 lg:px-8 -mt-14 relative z-20">
+      <div className="bg-white rounded-[36px] shadow-soft border border-navy-100 p-8 lg:p-12 grid lg:grid-cols-3 gap-10">
+        <div>
+          <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">About TransVigo</div>
+          <h2 className="mt-4 text-3xl lg:text-4xl font-extrabold leading-tight text-navy-900">
+            Reliable Fleet Movement With Operational Discipline
+          </h2>
+        </div>
+        <div className="lg:col-span-2 text-lg text-navy-600 leading-9">
+          TransVigo Logistics specializes in line-haul transportation, dedicated fleet deployment, inter-hub
+          movement and fixed-route dispatch operations. Our focus is assured vehicle placement, route discipline,
+          GPS visibility and scalable fleet execution for factories, warehouses and logistics partners across India.
+          <div className="mt-6 flex flex-wrap gap-3">
+            {["ISO-aligned SOPs", "Owned + Attached fleet", "Pan-India network", "Digital control tower"].map((t) => (
+              <span
+                key={t}
+                className="inline-flex items-center gap-2 bg-navy-50 text-navy-700 px-3.5 py-1.5 rounded-full text-sm font-semibold border border-navy-100"
+              >
+                <BadgeCheck size={16} className="text-teal-600" /> {t}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Services() {
+  return (
+    <section id="services" className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
+      <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-8 mb-14">
+        <div className="max-w-2xl">
+          <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">Services</div>
+          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-navy-900">
+            Core Transport Services
+          </h2>
+          <p className="mt-4 text-lg text-navy-500 leading-8">
+            Purpose-built transport operations for industrial movement, dedicated lanes and high-volume dispatch
+            support.
+          </p>
+        </div>
+        <a href="#contact" className="inline-flex items-center gap-2 text-teal-700 font-bold hover:text-teal-600">
+          Discuss a lane <ArrowRight size={18} />
+        </a>
+      </div>
+      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+        {services.map(({ title, text, Icon }, i) => {
+          const accent = i % 2 === 0 ? "text-lime-400" : "text-teal-400";
+          return (
+            <article
+              key={title}
+              className="group relative overflow-hidden bg-white rounded-3xl p-6 border border-navy-100 hover:border-teal-500/40 hover:shadow-soft hover:-translate-y-1 transition-all"
+            >
+              {/* corner glow */}
+              <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-gradient-to-br from-teal-500/0 to-lime-500/0 group-hover:from-teal-500/15 group-hover:to-lime-500/15 transition" />
+              {/* hover top accent bar */}
+              <div className="absolute top-0 left-6 right-6 h-1 rounded-b bg-gradient-to-r from-teal-500 via-forest-500 to-lime-500 opacity-0 group-hover:opacity-100 transition" />
+
+              <div className="relative flex items-start gap-4">
+                <div
+                  className="shrink-0 h-14 w-14 rounded-2xl grid place-items-center shadow-soft"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #143C61 0%, #0E3559 100%)",
+                  }}
+                >
+                  <Icon size={24} strokeWidth={2.2} className={accent} />
                 </div>
-                <div className="mini-stat">
-                  <strong>140+ Sites</strong>
-                  <span>Operational locations</span>
-                </div>
-                <div className="mini-stat">
-                  <strong>200+ Clients</strong>
-                  <span>Long-term partnerships</span>
-                </div>
-                <div className="mini-stat">
-                  <strong>28 States</strong>
-                  <span>Pan-India presence</span>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-lg font-extrabold text-navy-900 leading-snug">
+                    {title}
+                  </h3>
+                  <p className="mt-2 text-navy-500 text-sm leading-7">{text}</p>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
 
-        <section id="industries" className="industries">
-          <div className="container">
-            <p className="section-label" style={{ color: 'var(--teal)' }}>
-              Sectors We Serve
-            </p>
-            <h2>Industries</h2>
-            <div className="industry-grid">
-              {industries.map(({ label, Icon: I }) => (
-                <div key={label} className="industry-card">
-                  <I className="industry-card__icon" size={22} strokeWidth={2} aria-hidden />
-                  <span>{label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section ref={whySectionRef} className="why" id="why-transvigo" aria-labelledby="why-heading">
-          <div className="container why__shell">
-            <header className="why-intro">
-              <p className="section-label">Why Leaders Choose Us</p>
-              <h2 className="why__heading" id="why-heading">
-                Why Transvigo
-              </h2>
-              <p className="why-intro__lead">
-                Six pillars define how we run your network—from coverage and digitization to governance and
-                sustainability. Explore each pillar below.
-              </p>
-            </header>
-
-            <article className="why-detail" aria-live="polite">
-              <div className="why-detail__topStripe" aria-hidden="true" />
-              <div className="why-detail__grid">
-                <div className="why-detail__visual">
-                  <div className="why-detail__iconBubble" aria-hidden="true">
-                    <WhyDetailIcon size={52} strokeWidth={2} />
-                  </div>
-                  <p className="why-detail__index">
-                    <span>{String(selectedWhy + 1).padStart(2, '0')}</span>
-                    <span className="why-detail__indexSep">/</span>
-                    <span>{String(whyItems.length).padStart(2, '0')}</span>
-                  </p>
-                </div>
-                <div className="why-detail__copy">
-                  <h3 className="why-detail__title">{whyItems[selectedWhy].title}</h3>
-                  <p className="why-detail__tagline">{whyItems[selectedWhy].short}</p>
-                  <p className="why-detail__para">{whyItems[selectedWhy].body}</p>
-                  <div
-                    className="progress why-detail__progress"
-                    role="progressbar"
-                    aria-valuenow={Math.round(progress)}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                  >
-                    <div className="progress__bar" style={{ width: `${progress}%` }} />
-                  </div>
-                </div>
-              </div>
+              <a
+                href="#contact"
+                className="relative mt-5 inline-flex items-center gap-1 text-sm font-bold text-teal-700 hover:text-teal-600 hover:gap-2 transition-all"
+              >
+                Learn more <ArrowRight size={14} />
+              </a>
             </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
 
-            <div className="why-pickerLabel">Select a pillar to read more</div>
-            <div className="why-picker" role="tablist" aria-label="Why Transvigo pillars">
-              {whyItems.map((item, idx) => {
-                const active = selectedWhy === idx;
-                const ChipIcon = item.Icon;
-                return (
-                  <button
-                    key={item.title}
-                    type="button"
-                    role="tab"
-                    aria-selected={active}
-                    className={`why-chip ${active ? 'why-chip--active' : ''}`}
-                    onClick={() => handleWhyPillarSelect(idx)}
-                  >
-                    <ChipIcon className="why-chip__icon" size={24} strokeWidth={2} aria-hidden />
-                    <span className="why-chip__name">{item.title}</span>
-                    <span className="why-chip__blurp">{item.short}</span>
-                  </button>
-                );
-              })}
+function Fleet() {
+  return (
+    <section id="fleet" className="relative py-24 bg-navy-50/60 border-y border-navy-100">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-2xl">
+          <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">Fleet</div>
+          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-navy-900">
+            Right Vehicle. Right Lane. Right Time.
+          </h2>
+          <p className="mt-4 text-lg text-navy-500 leading-8">
+            Owned and attached fleet ranging from last-mile pickups to 40 ft trailers — matched to your cargo profile
+            and route economics.
+          </p>
+        </div>
+        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {fleet.map((v) => (
+            <div
+              key={v.type}
+              className="group relative bg-white rounded-3xl border border-navy-100 p-6 shadow-soft hover:border-lime-300 transition"
+            >
+              <div className="flex items-center justify-between">
+                <div className="h-12 w-12 rounded-2xl bg-lime-500/10 text-lime-600 grid place-items-center">
+                  <v.Icon size={22} strokeWidth={2.2} />
+                </div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-navy-400">
+                  {v.body}
+                </span>
+              </div>
+              <div className="mt-5 text-lg font-extrabold text-navy-900">{v.type}</div>
+              <div className="mt-1 inline-flex items-center gap-1.5 text-sm text-navy-500 font-semibold">
+                <Gauge size={14} className="text-teal-600" /> Payload {v.capacity}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HubSpokeMap() {
+  const cx = 400;
+  const cy = 400;
+  return (
+    <div className="relative w-full aspect-square max-w-[560px] mx-auto">
+      <svg viewBox="0 0 800 800" className="w-full h-full">
+        {/* concentric rings */}
+        {[120, 200, 280, 360].map((r) => (
+          <circle
+            key={r}
+            cx={cx}
+            cy={cy}
+            r={r}
+            fill="none"
+            stroke="rgba(43,166,183,0.18)"
+            strokeWidth="1"
+            strokeDasharray="2 6"
+          />
+        ))}
+
+        {/* crosshair */}
+        <line x1="60" y1={cy} x2="740" y2={cy} stroke="rgba(255,255,255,0.07)" />
+        <line x1={cx} y1="60" x2={cx} y2="740" stroke="rgba(255,255,255,0.07)" />
+
+        {/* routes */}
+        {corridors.map((c) => {
+          const x = cx + c.dx;
+          const y = cy + c.dy;
+          return (
+            <g key={c.name}>
+              <line
+                x1={cx}
+                y1={cy}
+                x2={x}
+                y2={y}
+                stroke="url(#routeGrad)"
+                strokeWidth="1.5"
+                strokeDasharray="6 6"
+                className="animate-dash"
+              />
+              <circle cx={x} cy={y} r="6" fill="#79C142" />
+              <circle cx={x} cy={y} r="11" fill="none" stroke="#79C142" strokeOpacity="0.4" />
+              <text
+                x={x + (c.dx >= 0 ? 14 : -14)}
+                y={y - 10}
+                fill="#e2e8f0"
+                fontSize="14"
+                fontWeight="700"
+                textAnchor={c.dx >= 0 ? "start" : "end"}
+              >
+                {c.name}
+              </text>
+              <text
+                x={x + (c.dx >= 0 ? 14 : -14)}
+                y={y + 8}
+                fill="#94a3b8"
+                fontSize="10.5"
+                fontWeight="600"
+                textAnchor={c.dx >= 0 ? "start" : "end"}
+              >
+                {c.code} · {c.distance}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* NCR hub */}
+        <g>
+          <circle cx={cx} cy={cy} r="40" fill="rgba(121,193,66,0.18)" />
+          <circle cx={cx} cy={cy} r="22" fill="#79C142" />
+          <circle cx={cx} cy={cy} r="22" fill="none" stroke="#fff" strokeOpacity="0.6" />
+          <text x={cx} y={cy + 5} textAnchor="middle" fill="#0a2240" fontWeight="800" fontSize="13">
+            NCR
+          </text>
+        </g>
+
+        <defs>
+          <linearGradient id="routeGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#2BBED9" />
+            <stop offset="50%" stopColor="#356939" />
+            <stop offset="100%" stopColor="#74C13F" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  );
+}
+
+function Routes() {
+  return (
+    <section id="routes" className="relative bg-gradient-to-br from-navy-800 via-navy-700 to-navy-900 text-white py-24 overflow-hidden">
+      <div className="absolute inset-0 bg-grid opacity-25 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/20 blur-3xl rounded-full" />
+
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-14 items-center">
+        <div>
+          <div className="text-lime-400 font-bold uppercase tracking-[0.22em] text-xs">Operational Network</div>
+          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold leading-tight">
+            Major Line-Haul & Fixed Route Corridors
+          </h2>
+          <p className="mt-5 text-white/70 text-lg leading-8 max-w-xl">
+            From the NCR hub we operate scheduled and on-demand linehaul to India's busiest industrial,
+            consumption and port corridors — with consistent placement KPIs.
+          </p>
+
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {corridors.slice(0, 9).map((c) => (
+              <div
+                key={c.name}
+                className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 backdrop-blur"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold">NCR ⇄ {c.name}</span>
+                  <span className="text-[10px] font-bold text-lime-400">{c.code}</span>
+                </div>
+                <div className="mt-1 text-[11px] text-white/55 font-semibold">{c.distance}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white/80">
+            <Globe2 size={16} className="text-teal-400" /> Open to lane requests — Pan-India
+          </div>
+        </div>
+
+        <div className="relative">
+          <HubSpokeMap />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Capabilities() {
+  return (
+    <section className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-2xl">
+          <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">Tech & Compliance</div>
+          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-navy-900">
+            A Control Tower Built for Linehaul
+          </h2>
+          <p className="mt-4 text-lg text-navy-500 leading-8">
+            Visibility, compliance and exception management — embedded into every trip we run.
+          </p>
+        </div>
+
+        <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {capabilities.map(({ title, text, Icon }) => (
+            <div
+              key={title}
+              className="relative rounded-3xl p-7 bg-navy-800 text-white overflow-hidden shadow-soft"
+            >
+              <div className="absolute -right-10 -top-10 h-32 w-32 bg-teal-500/20 rounded-full blur-2xl" />
+              <Icon size={28} className="text-lime-400" strokeWidth={2.2} />
+              <div className="mt-6 text-lg font-extrabold">{title}</div>
+              <p className="mt-2 text-white/65 text-sm leading-6">{text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Process() {
+  return (
+    <section id="process" className="py-24 bg-navy-50/60 border-y border-navy-100">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-2xl">
+          <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">How it works</div>
+          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-navy-900">
+            From Booking to Proof of Delivery
+          </h2>
+        </div>
+        <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {process.map(({ step, title, text, Icon }, i) => (
+            <div key={step} className="relative">
+              <div className="bg-white rounded-3xl p-7 border border-navy-100 shadow-soft h-full">
+                <div className="flex items-center justify-between">
+                  <span className="text-5xl font-extrabold text-navy-100">{step}</span>
+                  <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-teal-500 via-forest-500 to-lime-500 grid place-items-center text-white">
+                    <Icon size={22} strokeWidth={2.2} />
+                  </div>
+                </div>
+                <div className="mt-3 text-lg font-extrabold text-navy-900">{title}</div>
+                <p className="mt-2 text-navy-500 text-sm leading-6">{text}</p>
+              </div>
+              {i < process.length - 1 && (
+                <ArrowRight
+                  className="hidden lg:block absolute top-1/2 -right-4 -translate-y-1/2 text-navy-300"
+                  size={28}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Industries() {
+  return (
+    <section id="industries" className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+          <div className="max-w-2xl">
+            <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">Industries Served</div>
+            <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-navy-900">
+              Sectors We Move Every Day
+            </h2>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {industries.map(({ label, Icon }) => (
+            <div
+              key={label}
+              className="group flex items-center gap-4 bg-navy-50/70 hover:bg-white rounded-2xl p-5 border border-navy-100 hover:border-teal-200 hover:shadow-soft transition"
+            >
+              <div className="h-12 w-12 rounded-xl bg-white text-teal-600 grid place-items-center border border-navy-100 group-hover:bg-teal-500 group-hover:text-white transition">
+                <Icon size={22} strokeWidth={2.2} />
+              </div>
+              <span className="font-bold text-navy-800">{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function StatsBand() {
+  const items = [
+    { num: "98.6%", label: "On-time placement", Icon: Timer },
+    { num: "100%", label: "GPS-enabled trips", Icon: Radar },
+    { num: "10+", label: "Industries served", Icon: Boxes },
+    { num: "5,000+", label: "Trips / month", Icon: Truck },
+  ];
+  return (
+    <section className="relative">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 -mt-12 mb-0">
+        <div className="bg-gradient-to-r from-navy-800 to-navy-700 rounded-[32px] p-8 lg:p-10 shadow-soft grid grid-cols-2 lg:grid-cols-4 gap-6">
+          {items.map(({ num, label, Icon }) => (
+            <div key={label} className="flex items-center gap-4">
+              <div className="h-14 w-14 rounded-2xl bg-white/10 grid place-items-center text-lime-400">
+                <Icon size={24} strokeWidth={2.2} />
+              </div>
+              <div>
+                <div className="text-3xl font-extrabold text-white">{num}</div>
+                <div className="text-white/65 text-sm font-semibold">{label}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Founder() {
+  return (
+    <section
+      id="founder"
+      className="relative py-24 overflow-hidden text-white bg-gradient-to-br from-navy-800 via-navy-700 to-navy-900"
+    >
+      {/* Grid + brand-color glows — moved here from the old hero */}
+      <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
+      <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-teal-500/20 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 -left-32 w-[500px] h-[500px] rounded-full bg-lime-500/15 blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-12 gap-14 items-center">
+        {/* Portrait */}
+        <div className="lg:col-span-5 relative">
+          <div
+            className="absolute -top-6 -left-6 h-40 w-40 rounded-3xl opacity-40 blur-xl"
+            style={{ background: "linear-gradient(135deg,#74C13F,#2BBED9)" }}
+          />
+          <div
+            className="absolute -bottom-6 -right-6 h-44 w-44 rounded-3xl opacity-40 blur-xl"
+            style={{ background: "linear-gradient(135deg,#2BBED9,#143C61)" }}
+          />
+
+          <div className="relative rounded-[32px] overflow-hidden border border-white/15 bg-white/5 backdrop-blur shadow-2xl">
+            <img
+              src="/founder.jpeg"
+              alt="Founder, TransVigo Logistics"
+              className="w-full aspect-[4/5] object-cover"
+              draggable={false}
+            />
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-navy-900/70 to-transparent pointer-events-none" />
+          </div>
+
+          {/* floating credential card */}
+          <div className="absolute -bottom-5 left-6 right-6 bg-white rounded-2xl shadow-2xl p-4 flex items-center gap-3 border border-navy-100">
+            <div
+              className="h-12 w-12 rounded-xl grid place-items-center"
+              style={{ background: "linear-gradient(135deg,#143C61,#0E3559)" }}
+            >
+              <Quote size={20} className="text-lime-400" />
+            </div>
+            <div className="leading-tight">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-navy-500">
+                Founder &amp; Managing Director
+              </div>
+              <div className="text-base font-extrabold text-navy-900">
+                TransVigo Logistics
+              </div>
             </div>
           </div>
-        </section>
+        </div>
 
-        <section className="testimonials">
-          <div className="container testimonial-wrap">
-            <p className="section-label">Client Voices</p>
-            <h2
+        {/* Message */}
+        <div className="lg:col-span-7">
+          <div className="text-lime-400 font-bold uppercase tracking-[0.22em] text-xs">
+            From the Founder
+          </div>
+          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold leading-tight">
+            A promise to{" "}
+            <span
+              className="bg-clip-text text-transparent"
               style={{
-                fontFamily: "'Montserrat', sans-serif",
-                fontWeight: 900,
-                fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-                marginBottom: '2rem',
-                color: 'var(--navy)',
+                backgroundImage:
+                  "linear-gradient(90deg,#5DD0E6 0%,#9bd55e 50%,#95D360 100%)",
               }}
             >
-              Testimonials
-            </h2>
-            <article className="testimonial-card">
-              <div className="quote-mark" aria-hidden="true">
-                “
-              </div>
-              <p className="testimonial-text">{testimonials[activeTestimonial].quote}</p>
-              <div className="avatar">{testimonials[activeTestimonial].initial}</div>
-              <p className="person-name">{testimonials[activeTestimonial].name}</p>
-              <p className="person-role">
-                {testimonials[activeTestimonial].role}, {testimonials[activeTestimonial].company}
-              </p>
-            </article>
-            <div className="dots">
-              {testimonials.map((_, i) => (
-                <button
-                  key={`t-${i}`}
-                  type="button"
-                  className={`dot ${i === activeTestimonial ? 'dot--active' : ''}`}
-                  aria-label={`Show testimonial ${i + 1}`}
-                  onClick={() => setActiveTestimonial(i)}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
+              every load, every lane
+            </span>
+            .
+          </h2>
 
-        <section id="careers" className="careers-strip">
-          <div className="container careers-strip__inner">
+          <Quote
+            size={44}
+            className="mt-8 text-teal-400/50"
+            strokeWidth={1.6}
+          />
+          <blockquote className="mt-2 text-lg lg:text-xl text-white/85 leading-9 max-w-2xl">
+            TransVigo was built around one belief — that India's industrial
+            corridors deserve linehaul partners who are accountable to the load,
+            not just the rate. Every truck we attach, every lane we open and
+            every digital tool we deploy serves that promise: <em className="text-white">disciplined
+            operations, transparent tracking, and on-time delivery</em>.
+          </blockquote>
+
+          <div className="mt-8 flex items-center gap-4">
+            <div
+              className="h-12 w-12 rounded-full grid place-items-center text-navy-900 font-extrabold"
+              style={{ background: "linear-gradient(135deg,#2BBED9,#74C13F)" }}
+            >
+              TV
+            </div>
             <div>
-              <h3 className="careers-strip__title">
-                <UsersRound className="careers-strip__titleIcon" size={28} strokeWidth={2} aria-hidden />
-                Careers at Transvigo
-              </h3>
-              <p>
-                Grow with India&apos;s evolving logistics landscape. Explore roles across operations, engineering,
-                commercial teams, and shared services—with training paths that deepen your expertise.
-              </p>
+              <div className="text-lg font-extrabold">
+                Founder, TransVigo Logistics
+              </div>
+              <div className="text-sm text-white/65 font-semibold">
+                NCR · India · {new Date().getFullYear()}
+              </div>
             </div>
-            <a className="btn-primary" href="#contact">
-              TALK TO HR →
-            </a>
           </div>
-        </section>
 
-        <section className="marquee-section" aria-label="Trusted by leading brands">
-          <div className="marquee">
-            {[0, 1].map((group) => (
-              <div key={group} className="marquee__group">
-                {clients.map((c) => (
-                  <span key={`${group}-${c}`} className="marquee-badge">
-                    {c}
-                  </span>
-                ))}
+          <div className="mt-10 grid grid-cols-3 gap-6 max-w-lg">
+            {[
+              ["20+", "Years in Industry"],
+              ["200+", "Vehicles Managed"],
+              ["10+", "Sectors Served"],
+            ].map(([num, label]) => (
+              <div key={label} className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur">
+                <div className="text-3xl font-extrabold bg-gradient-to-r from-teal-400 via-forest-400 to-lime-400 bg-clip-text text-transparent">
+                  {num}
+                </div>
+                <div className="mt-1 text-[11px] font-bold uppercase tracking-wider text-white/60">
+                  {label}
+                </div>
               </div>
             ))}
           </div>
-        </section>
 
-        <section id="contact" className="contact">
-          <div className="container contact__grid">
-            <div>
-              <p className="section-label" style={{ color: 'var(--teal)' }}>
-                Get In Touch
-              </p>
-              <h2>Contact Transvigo</h2>
-              <p className="contact__sub">
-                Speak with our team about warehousing, transportation, or a tailored program for your network.
-              </p>
-              <div className="contact-direct">
-                <a
-                  href={CONTACT_WHATSAPP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="contact-direct__btn contact-direct__btn--whatsapp"
-                >
-                  <MessageCircle size={21} strokeWidth={2} aria-hidden /> Message us on WhatsApp
-                </a>
-                <a href={CONTACT_MAILTO_URL} className="contact-direct__btn contact-direct__btn--email">
-                  <Mail size={21} strokeWidth={2} aria-hidden /> Email {CONTACT_EMAIL_DISPLAY}
-                </a>
-              </div>
-              <p className="contact-direct__hint">
-                Prefer a quick reply? Start on WhatsApp. For tenders or detailed briefs, use email or the callback
-                form.
-              </p>
-              <div className="office-grid">
-                <div className="office-card">
-                  <h4 className="office-card__head">
-                    <MapPinned size={18} strokeWidth={2} aria-hidden />
-                    Corporate — Thane
-                  </h4>
-                  <a href="tel:+912225550001" className="office-card__phone">
-                    <Phone size={18} strokeWidth={2} aria-hidden /> +91 22 2555 0001
-                  </a>
-                </div>
-                <div className="office-card">
-                  <h4 className="office-card__head">
-                    <MapPinned size={18} strokeWidth={2} aria-hidden />
-                    North — Gurugram
-                  </h4>
-                  <a href="tel:+911244551100" className="office-card__phone">
-                    <Phone size={18} strokeWidth={2} aria-hidden /> +91 124 455 1100
-                  </a>
-                </div>
-                <div className="office-card">
-                  <h4 className="office-card__head">
-                    <MapPinned size={18} strokeWidth={2} aria-hidden />
-                    East — Kolkata
-                  </h4>
-                  <a href="tel:+913340020033" className="office-card__phone">
-                    <Phone size={18} strokeWidth={2} aria-hidden /> +91 33 4002 0033
-                  </a>
-                </div>
-                <div className="office-card">
-                  <h4 className="office-card__head">
-                    <MapPinned size={18} strokeWidth={2} aria-hidden />
-                    South — Bengaluru
-                  </h4>
-                  <a href="tel:+918067550044" className="office-card__phone">
-                    <Phone size={18} strokeWidth={2} aria-hidden /> +91 80 6755 0044
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="form-card">
-              <h3 className="form-card__heading">
-                <Send size={26} strokeWidth={2} aria-hidden /> Request a Callback
-              </h3>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  alert('Thank you. Our team will contact you shortly.');
-                }}
-              >
-                <label htmlFor="name">Name</label>
-                <input id="name" name="name" type="text" required autoComplete="name" />
-
-                <label htmlFor="email">Email</label>
-                <input id="email" name="email" type="email" required autoComplete="email" />
-
-                <label htmlFor="company">Company</label>
-                <input id="company" name="company" type="text" autoComplete="organization" />
-
-                <label htmlFor="mobile">Mobile</label>
-                <input id="mobile" name="mobile" type="tel" autoComplete="tel" />
-
-                <label htmlFor="message">How can we help?</label>
-                <textarea id="message" name="message" />
-
-                <button type="submit" className="btn-primary" style={{ width: '100%' }}>
-                  SUBMIT REQUEST →
-                </button>
-              </form>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer className="footer">
-        <div className="container footer__grid">
-          <div className="footer__brand">
-            <Logo variant="footer" />
-            <p>
-              Integrated 3PL for enterprises that demand precision, transparency, and scale across India—with a
-              partner ethos rooted in Moving Business Forward.
-            </p>
-            <div className="socials">
-              {socialLinks.map(({ href, label, Icon: SocIcon }) => (
-                <a key={label} className="social" href={href} aria-label={label}>
-                  <SocIcon size={17} />
-                </a>
-              ))}
-            </div>
-            <div className="footer__reachOut">
-              <a
-                className="footer__reachRow"
-                href={CONTACT_WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <MessageCircle size={18} strokeWidth={2} aria-hidden />
-                WhatsApp chat
-              </a>
-              <a className="footer__reachRow" href={CONTACT_MAILTO_URL}>
-                <Mail size={18} strokeWidth={2} aria-hidden />
-                {CONTACT_EMAIL_DISPLAY}
-              </a>
-            </div>
-          </div>
-          <div>
-            <h4>Solutions</h4>
-            <ul>
-              {solutions.slice(0, 6).map((s) => (
-                <li key={s.title}>
-                  <a href="#solutions">{s.title}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4>Industries</h4>
-            <ul>
-              {industries.map(({ label }) => (
-                <li key={label}>
-                  <a href="#industries">{label}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4>Company</h4>
-            <ul>
-              <li>
-                <a href="#about">About Us</a>
-              </li>
-              <li>
-                <a href="#careers">Careers</a>
-              </li>
-              <li>
-                <a href="#contact">Contact</a>
-              </li>
-              <li>
-                <a href="#home">ESG</a>
-              </li>
-            </ul>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-lime-500 hover:bg-lime-400 transition text-navy-900 font-bold px-5 py-3 rounded-2xl text-sm shadow-soft"
+            >
+              <MessageCircle size={16} /> Speak to the Founder
+            </a>
+            <a
+              href={MAILTO}
+              className="inline-flex items-center gap-2 border border-white/25 hover:bg-white/10 backdrop-blur transition text-white font-bold px-5 py-3 rounded-2xl text-sm"
+            >
+              <Mail size={16} /> {EMAIL}
+            </a>
           </div>
         </div>
-        <div className="footer__bar container">© 2026 Transvigo – Moving Business Forward. All rights reserved.</div>
-      </footer>
+      </div>
+    </section>
+  );
+}
 
-      <aside className="contact-dock" aria-label="Quick contact">
-        <a
-          className="contact-dock__btn contact-dock__btn--wa"
-          href={CONTACT_WHATSAPP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Open WhatsApp chat with Transvigo"
-        >
-          <MessageCircle size={22} strokeWidth={2} aria-hidden />
-          <span className="contact-dock__text">
-            <span className="contact-dock__title">WhatsApp</span>
-            <span className="contact-dock__hint">Fastest reply</span>
+function Contact() {
+  return (
+    <section id="contact" className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
+      <div className="relative rounded-[40px] bg-gradient-to-br from-navy-800 via-navy-700 to-navy-900 text-white p-8 lg:p-14 overflow-hidden">
+        <div className="absolute inset-0 bg-grid opacity-25 pointer-events-none" />
+        <div className="absolute -right-20 -top-20 w-80 h-80 bg-lime-500/20 blur-3xl rounded-full" />
+        <div className="absolute -left-10 bottom-0 w-72 h-72 bg-teal-500/20 blur-3xl rounded-full" />
+
+        <div className="relative grid lg:grid-cols-2 gap-12 items-start">
+          <div>
+            <div className="text-lime-400 uppercase tracking-[0.22em] font-bold text-xs">Contact Us</div>
+            <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold leading-tight">
+              Need Dedicated Vehicles On Fixed Routes?
+            </h2>
+            <p className="mt-5 text-lg text-white/75 leading-9 max-w-xl">
+              Connect with TransVigo Logistics for daily vehicle placement, inter-hub transportation and scalable
+              fleet operations.
+            </p>
+
+            <div className="mt-8 space-y-3">
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 bg-lime-500 hover:bg-lime-400 text-navy-900 font-bold px-5 py-4 rounded-2xl w-fit transition"
+              >
+                <MessageCircle size={20} /> Chat on WhatsApp
+              </a>
+              <a
+                href={MAILTO}
+                className="flex items-center gap-3 bg-white/10 hover:bg-white/15 backdrop-blur border border-white/15 text-white font-semibold px-5 py-4 rounded-2xl w-fit transition"
+              >
+                <Mail size={20} /> {EMAIL}
+              </a>
+              <a
+                href="tel:+919876543210"
+                className="flex items-center gap-3 bg-white/10 hover:bg-white/15 backdrop-blur border border-white/15 text-white font-semibold px-5 py-4 rounded-2xl w-fit transition"
+              >
+                <Phone size={20} /> +91 98765 43210
+              </a>
+            </div>
+
+            <div className="mt-10 grid sm:grid-cols-2 gap-4">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
+                <div className="text-xs font-bold uppercase tracking-wider text-lime-400">NCR — Head Office</div>
+                <div className="mt-1.5 text-white font-bold flex items-start gap-2">
+                  <MapPin size={16} className="mt-1 text-teal-400" />
+                  Logistics Park, Greater Noida, UP
+                </div>
+              </div>
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
+                <div className="text-xs font-bold uppercase tracking-wider text-lime-400">Operations Hub</div>
+                <div className="mt-1.5 text-white font-bold flex items-start gap-2">
+                  <Compass size={16} className="mt-1 text-teal-400" />
+                  Faridabad · Ghaziabad · Bhiwadi
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white text-navy-900 rounded-[28px] p-8 lg:p-10 shadow-2xl">
+            <h3 className="text-2xl font-extrabold">Request a Callback</h3>
+            <p className="mt-1 text-navy-500 text-sm">Share your requirement — our team responds within hours.</p>
+            <form
+              className="mt-6 space-y-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                alert("Thanks — TransVigo will reach out shortly.");
+              }}
+            >
+              <div className="grid sm:grid-cols-2 gap-4">
+                <input required placeholder="Company Name" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
+                <input required placeholder="Contact Person" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
+              </div>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <input required placeholder="Origin (City)" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
+                <input required placeholder="Destination (City)" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
+              </div>
+              <input required placeholder="Vehicle Requirement (e.g. 32 ft SXL × 4)" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
+              <div className="grid sm:grid-cols-2 gap-4">
+                <input required type="tel" placeholder="Mobile" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
+                <input type="email" placeholder="Email" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
+              </div>
+              <button
+                type="submit"
+                className="w-full inline-flex items-center justify-center gap-2 bg-lime-500 hover:bg-lime-400 transition text-navy-900 py-4 rounded-2xl font-bold text-base shadow-soft"
+              >
+                Request Callback <ArrowRight size={18} strokeWidth={2.6} />
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="bg-navy-900 text-white/80">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 grid lg:grid-cols-12 gap-10">
+        <div className="lg:col-span-5">
+          <Logo inverse />
+          <p className="mt-6 text-white/65 leading-8 max-w-md">
+            TransVigo Logistics — disciplined linehaul, dedicated fleet and inter-hub transportation across India's
+            industrial corridors.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-lime-500 text-navy-900 font-bold px-4 py-2.5 rounded-full text-sm"
+            >
+              <MessageCircle size={16} /> WhatsApp
+            </a>
+            <a href={MAILTO} className="inline-flex items-center gap-2 border border-white/15 px-4 py-2.5 rounded-full text-sm">
+              <Mail size={16} /> Email
+            </a>
+          </div>
+        </div>
+
+        <div className="lg:col-span-2">
+          <h4 className="text-white font-bold mb-4 text-sm tracking-wider uppercase">Services</h4>
+          <ul className="space-y-2 text-sm">
+            {services.slice(0, 6).map((s) => (
+              <li key={s.title}>
+                <a href="#services" className="hover:text-lime-400 transition">{s.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="lg:col-span-2">
+          <h4 className="text-white font-bold mb-4 text-sm tracking-wider uppercase">Network</h4>
+          <ul className="space-y-2 text-sm">
+            {corridors.slice(0, 6).map((c) => (
+              <li key={c.name}>
+                <a href="#routes" className="hover:text-lime-400 transition">NCR ⇄ {c.name}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="lg:col-span-3">
+          <h4 className="text-white font-bold mb-4 text-sm tracking-wider uppercase">Reach Us</h4>
+          <ul className="space-y-3 text-sm">
+            <li className="flex items-start gap-2">
+              <Building2 size={16} className="mt-0.5 text-teal-400" />
+              <span>Logistics Park, Greater Noida, UP — 201306</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <Phone size={16} className="text-teal-400" />
+              <a href="tel:+919876543210" className="hover:text-lime-400">+91 98765 43210</a>
+            </li>
+            <li className="flex items-center gap-2">
+              <Mail size={16} className="text-teal-400" />
+              <a href={MAILTO} className="hover:text-lime-400">{EMAIL}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between text-xs text-white/55 gap-2">
+          <span>© {new Date().getFullYear()} TransVigo Logistics. Moving Business Forward.</span>
+          <span className="inline-flex items-center gap-2">
+            <ShieldCheck size={14} className="text-teal-400" /> EWB · FASTag · MSME registered
           </span>
-        </a>
-        <a
-          className="contact-dock__btn contact-dock__btn--mail"
-          href={CONTACT_MAILTO_URL}
-          aria-label={`Send email to ${CONTACT_EMAIL_DISPLAY}`}
-        >
-          <Mail size={22} strokeWidth={2} aria-hidden />
-          <span className="contact-dock__text">
-            <span className="contact-dock__title">Email</span>
-            <span className="contact-dock__hint">{CONTACT_EMAIL_DISPLAY}</span>
-          </span>
-        </a>
-      </aside>
-    </>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function ContactDock() {
+  return (
+    <aside className="fixed bottom-5 right-5 z-40 flex flex-col gap-3">
+      <a
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="WhatsApp TransVigo"
+        className="group h-14 w-14 rounded-full bg-lime-500 hover:bg-lime-400 transition grid place-items-center shadow-2xl"
+      >
+        <MessageCircle className="text-navy-900" size={24} />
+      </a>
+      <a
+        href="tel:+919876543210"
+        aria-label="Call TransVigo"
+        className="group h-14 w-14 rounded-full bg-white hover:bg-navy-50 transition grid place-items-center shadow-2xl border border-navy-100"
+      >
+        <Phone className="text-teal-700" size={22} />
+      </a>
+    </aside>
+  );
+}
+
+export default function App() {
+  return (
+    <div className="bg-white text-navy-900 min-h-screen">
+      <Nav />
+      <Hero />
+      <PartnersMarquee />
+      <About />
+      <Services />
+      <Fleet />
+      <Routes />
+      <StatsBand />
+      <Capabilities />
+      <Process />
+      <Industries />
+      <Founder />
+      <Contact />
+      <Footer />
+      <ContactDock />
+    </div>
   );
 }
