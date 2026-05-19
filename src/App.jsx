@@ -7,7 +7,6 @@ import {
   Building2,
   CheckCircle2,
   ClipboardList,
-  Compass,
   Factory,
   Fuel,
   Gauge,
@@ -34,10 +33,16 @@ import {
   Zap,
 } from "lucide-react";
 
-const WHATSAPP_DIGITS = "919876543210";
+const WHATSAPP_DIGITS = "919910044150";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_DIGITS}?text=${encodeURIComponent(
   "Hi TransVigo, I'd like to discuss fleet / line-haul requirements."
 )}`;
+const PHONE_PRIMARY = "+91 99100 44150";
+const PHONE_SECONDARY = "+91 92126 34150";
+const PHONE_PRIMARY_TEL = "+919910044150";
+const PHONE_SECONDARY_TEL = "+919212634150";
+const OFFICE_ADDRESS =
+  "Khasra No-7, Opp. Hanuman Mandir, N.H-8, Bilaspur Chowk, Gurugram, Haryana";
 const EMAIL = "info@transvigo.com";
 const MAILTO = `mailto:${EMAIL}?subject=${encodeURIComponent(
   "Enquiry — TransVigo Logistics"
@@ -113,14 +118,24 @@ const capabilities = [
 
 const corridors = [
   // dx, dy from center hub; values are normalized for an 800x800 svg with hub at (400,400)
-  { name: "Mumbai", code: "BOM", dx: -180, dy: 220, distance: "1,400 km" },
-  { name: "Ahmedabad", code: "AMD", dx: -260, dy: 80, distance: "950 km" },
-  { name: "Surat", code: "STV", dx: -230, dy: 170, distance: "1,160 km" },
-  { name: "Pune", code: "PNQ", dx: -150, dy: 260, distance: "1,450 km" },
-  { name: "Bengaluru", code: "BLR", dx: -60, dy: 320, distance: "2,100 km" },
-  { name: "Hyderabad", code: "HYD", dx: 30, dy: 250, distance: "1,500 km" },
-  { name: "Kolkata", code: "CCU", dx: 280, dy: 70, distance: "1,500 km" },
-  { name: "Lucknow", code: "LKO", dx: 180, dy: -40, distance: "550 km" },
+  { name: "Mumbai", code: "BOM", dx: -200, dy: 215, distance: "1,400 km" },
+  { name: "Bhiwandi", code: "BIY", dx: -175, dy: 245, distance: "1,380 km" },
+  { name: "Ahmedabad", code: "AMD", dx: -270, dy: 70, distance: "950 km" },
+  { name: "Surat", code: "STV", dx: -245, dy: 155, distance: "1,160 km" },
+  { name: "Pune", code: "PNQ", dx: -135, dy: 270, distance: "1,450 km" },
+  { name: "Kolhapur", code: "KLH", dx: -100, dy: 295, distance: "1,700 km" },
+  { name: "Goa", code: "GOI", dx: -150, dy: 315, distance: "1,880 km" },
+  { name: "Bengaluru", code: "BLR", dx: -55, dy: 330, distance: "2,100 km" },
+  { name: "Cochin", code: "COK", dx: -85, dy: 360, distance: "2,580 km" },
+  { name: "Coimbatore", code: "CJB", dx: -30, dy: 365, distance: "2,460 km" },
+  { name: "Madurai", code: "IXM", dx: 15, dy: 370, distance: "2,440 km" },
+  { name: "Salem", code: "SXV", dx: 55, dy: 350, distance: "2,300 km" },
+  { name: "Chennai", code: "MAA", dx: 100, dy: 320, distance: "2,200 km" },
+  { name: "Hyderabad", code: "HYD", dx: 40, dy: 245, distance: "1,500 km" },
+  { name: "Kolkata", code: "CCU", dx: 290, dy: 60, distance: "1,500 km" },
+  { name: "Guwahati", code: "GAU", dx: 320, dy: -15, distance: "1,860 km" },
+  { name: "Patna", code: "PAT", dx: 235, dy: 20, distance: "1,000 km" },
+  { name: "Lucknow", code: "LKO", dx: 175, dy: -45, distance: "550 km" },
   { name: "Jaipur", code: "JAI", dx: -160, dy: -10, distance: "270 km" },
   { name: "Chandigarh", code: "IXC", dx: 30, dy: -160, distance: "250 km" },
 ];
@@ -283,7 +298,7 @@ function Hero() {
       <div className="absolute bottom-0 -left-32 w-[500px] h-[500px] rounded-full bg-lime-500/15 blur-3xl pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-20 grid lg:grid-cols-12 gap-12 items-center">
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-8">
           <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 text-xs sm:text-sm font-medium tracking-wide">
             <span className="relative grid place-items-center">
               <span className="absolute inset-0 rounded-full bg-lime-400 animate-ping2" />
@@ -322,39 +337,6 @@ function Hero() {
             <span className="inline-flex items-center gap-2"><CheckCircle2 size={16} className="text-lime-400" /> GPS on every trip</span>
             <span className="inline-flex items-center gap-2"><CheckCircle2 size={16} className="text-lime-400" /> EWB &amp; FASTag compliant</span>
             <span className="inline-flex items-center gap-2"><CheckCircle2 size={16} className="text-lime-400" /> On-time placement SLAs</span>
-          </div>
-        </div>
-
-        {/* Right column — floating trust cards over the truck */}
-        <div className="lg:col-span-5 relative min-h-[320px] hidden lg:block">
-          <div className="absolute top-4 right-0 bg-white/95 backdrop-blur text-navy-900 rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3 animate-floaty">
-            <div className="h-10 w-10 rounded-xl bg-teal-500/15 text-teal-600 grid place-items-center">
-              <ShieldCheck size={20} />
-            </div>
-            <div>
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-navy-500">EWB · FASTag</div>
-              <div className="text-sm font-bold">100% Compliant</div>
-            </div>
-          </div>
-
-          <div className="absolute top-32 right-12 bg-white/95 backdrop-blur text-navy-900 rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3 w-[250px]" style={{ animation: "floaty 5s ease-in-out infinite", animationDelay: "0.6s" }}>
-            <div className="h-10 w-10 rounded-xl bg-lime-500/15 text-lime-600 grid place-items-center">
-              <Radar size={20} />
-            </div>
-            <div>
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-navy-500">Live Tracking</div>
-              <div className="text-sm font-bold">NCR → Mumbai · ETA 28h</div>
-            </div>
-          </div>
-
-          <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur text-navy-900 rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3 animate-floaty" style={{ animationDelay: "1.2s" }}>
-            <div className="h-10 w-10 rounded-xl bg-navy-100 text-navy-700 grid place-items-center">
-              <Truck size={20} />
-            </div>
-            <div>
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-navy-500">Owned Fleet</div>
-              <div className="text-sm font-bold">HR55AV0024</div>
-            </div>
           </div>
         </div>
 
@@ -574,23 +556,23 @@ function HubSpokeMap() {
                 strokeDasharray="6 6"
                 className="animate-dash"
               />
-              <circle cx={x} cy={y} r="6" fill="#79C142" />
-              <circle cx={x} cy={y} r="11" fill="none" stroke="#79C142" strokeOpacity="0.4" />
+              <circle cx={x} cy={y} r="4.5" fill="#79C142" />
+              <circle cx={x} cy={y} r="8" fill="none" stroke="#79C142" strokeOpacity="0.4" />
               <text
-                x={x + (c.dx >= 0 ? 14 : -14)}
-                y={y - 10}
+                x={x + (c.dx >= 0 ? 11 : -11)}
+                y={y - 6}
                 fill="#e2e8f0"
-                fontSize="14"
+                fontSize="11"
                 fontWeight="700"
                 textAnchor={c.dx >= 0 ? "start" : "end"}
               >
                 {c.name}
               </text>
               <text
-                x={x + (c.dx >= 0 ? 14 : -14)}
-                y={y + 8}
+                x={x + (c.dx >= 0 ? 11 : -11)}
+                y={y + 6}
                 fill="#94a3b8"
-                fontSize="10.5"
+                fontSize="9"
                 fontWeight="600"
                 textAnchor={c.dx >= 0 ? "start" : "end"}
               >
@@ -640,7 +622,7 @@ function Routes() {
           </p>
 
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {corridors.slice(0, 9).map((c) => (
+            {corridors.map((c) => (
               <div
                 key={c.name}
                 className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 backdrop-blur"
@@ -769,7 +751,7 @@ function Industries() {
 function StatsBand() {
   const items = [
     { num: "98.6%", label: "On-time placement", Icon: Timer },
-    { num: "100%", label: "GPS-enabled trips", Icon: Radar },
+    { num: "200+", label: "GPS-enabled vehicles", Icon: Radar },
     { num: "10+", label: "Industries served", Icon: Boxes },
     { num: "5,000+", label: "Trips / month", Icon: Truck },
   ];
@@ -969,26 +951,25 @@ function Contact() {
                 <Mail size={20} /> {EMAIL}
               </a>
               <a
-                href="tel:+919876543210"
+                href={`tel:${PHONE_PRIMARY_TEL}`}
                 className="flex items-center gap-3 bg-white/10 hover:bg-white/15 backdrop-blur border border-white/15 text-white font-semibold px-5 py-4 rounded-2xl w-fit transition"
               >
-                <Phone size={20} /> +91 98765 43210
+                <Phone size={20} /> {PHONE_PRIMARY}
+              </a>
+              <a
+                href={`tel:${PHONE_SECONDARY_TEL}`}
+                className="flex items-center gap-3 bg-white/10 hover:bg-white/15 backdrop-blur border border-white/15 text-white font-semibold px-5 py-4 rounded-2xl w-fit transition"
+              >
+                <Phone size={20} /> {PHONE_SECONDARY}
               </a>
             </div>
 
-            <div className="mt-10 grid sm:grid-cols-2 gap-4">
+            <div className="mt-10">
               <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
-                <div className="text-xs font-bold uppercase tracking-wider text-lime-400">NCR — Head Office</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-lime-400">Operational Office</div>
                 <div className="mt-1.5 text-white font-bold flex items-start gap-2">
-                  <MapPin size={16} className="mt-1 text-teal-400" />
-                  Logistics Park, Greater Noida, UP
-                </div>
-              </div>
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
-                <div className="text-xs font-bold uppercase tracking-wider text-lime-400">Operations Hub</div>
-                <div className="mt-1.5 text-white font-bold flex items-start gap-2">
-                  <Compass size={16} className="mt-1 text-teal-400" />
-                  Faridabad · Ghaziabad · Bhiwadi
+                  <MapPin size={16} className="mt-1 shrink-0 text-teal-400" />
+                  <span>{OFFICE_ADDRESS}</span>
                 </div>
               </div>
             </div>
@@ -1082,12 +1063,16 @@ function Footer() {
           <h4 className="text-white font-bold mb-4 text-sm tracking-wider uppercase">Reach Us</h4>
           <ul className="space-y-3 text-sm">
             <li className="flex items-start gap-2">
-              <Building2 size={16} className="mt-0.5 text-teal-400" />
-              <span>Logistics Park, Greater Noida, UP — 201306</span>
+              <Building2 size={16} className="mt-0.5 shrink-0 text-teal-400" />
+              <span>{OFFICE_ADDRESS}</span>
             </li>
             <li className="flex items-center gap-2">
               <Phone size={16} className="text-teal-400" />
-              <a href="tel:+919876543210" className="hover:text-lime-400">+91 98765 43210</a>
+              <a href={`tel:${PHONE_PRIMARY_TEL}`} className="hover:text-lime-400">{PHONE_PRIMARY}</a>
+            </li>
+            <li className="flex items-center gap-2">
+              <Phone size={16} className="text-teal-400" />
+              <a href={`tel:${PHONE_SECONDARY_TEL}`} className="hover:text-lime-400">{PHONE_SECONDARY}</a>
             </li>
             <li className="flex items-center gap-2">
               <Mail size={16} className="text-teal-400" />
@@ -1122,7 +1107,7 @@ function ContactDock() {
         <MessageCircle className="text-navy-900" size={24} />
       </a>
       <a
-        href="tel:+919876543210"
+        href={`tel:${PHONE_PRIMARY_TEL}`}
         aria-label="Call TransVigo"
         className="group h-14 w-14 rounded-full bg-white hover:bg-navy-50 transition grid place-items-center shadow-2xl border border-navy-100"
       >
