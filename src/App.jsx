@@ -101,12 +101,12 @@ const services = [
 const fleet = [
   { type: "32 ft Single Axle", capacity: "9–10 T", body: "Container / SXL", Icon: Truck },
   { type: "32 ft Multi Axle", capacity: "14–18 T", body: "Container / MXL", Icon: Truck },
-  { type: "24 ft Container", capacity: "7–8 T", body: "Closed Body", Icon: Truck },
-  { type: "20 ft Container", capacity: "6–7 T", body: "Closed Body", Icon: Truck },
-  { type: "17 ft Open Body", capacity: "5 T", body: "Open / Tarp", Icon: Truck },
-  { type: "14 ft / 1109", capacity: "3.5–4 T", body: "Closed Body", Icon: Truck },
-  { type: "Tata Ace / Pickup", capacity: "<1 T", body: "Last Mile", Icon: Truck },
-  { type: "Trailer (40 ft)", capacity: "20–25 T", body: "Project Cargo", Icon: Truck },
+  // { type: "24 ft Container", capacity: "7–8 T", body: "Closed Body", Icon: Truck },
+  // { type: "20 ft Container", capacity: "6–7 T", body: "Closed Body", Icon: Truck },
+  // { type: "17 ft Open Body", capacity: "5 T", body: "Open / Tarp", Icon: Truck },
+  // { type: "14 ft / 1109", capacity: "3.5–4 T", body: "Closed Body", Icon: Truck },
+  // { type: "Tata Ace / Pickup", capacity: "<1 T", body: "Last Mile", Icon: Truck },
+  // { type: "Trailer (40 ft)", capacity: "20–25 T", body: "Project Cargo", Icon: Truck },
 ];
 
 const capabilities = [
@@ -490,7 +490,7 @@ function Fleet() {
             and route economics.
           </p>
         </div>
-        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="mt-12 grid sm:grid-cols-2 gap-5">
           {fleet.map((v) => (
             <div
               key={v.type}
