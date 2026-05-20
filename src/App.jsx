@@ -210,7 +210,7 @@ function Nav() {
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
         <Logo inverse={inverse} />
         <nav className="hidden lg:flex items-center gap-8">
           {navLinks.map((l) => (
@@ -246,7 +246,7 @@ function Nav() {
         </button>
       </div>
       {open && (
-        <div className="lg:hidden bg-white border-t border-navy-100 px-6 py-5 space-y-3 shadow-lg">
+        <div className="lg:hidden bg-white border-t border-navy-100 px-4 sm:px-6 py-5 space-y-3 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto">
           {navLinks.map((l) => (
             <a
               key={l.href}
@@ -274,7 +274,7 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative overflow-hidden text-white pt-10 min-h-[760px]"
+      className="relative overflow-hidden text-white pt-10 min-h-[640px] sm:min-h-[700px] lg:min-h-[760px]"
     >
       {/* Truck background image */}
       <img
@@ -297,16 +297,16 @@ function Hero() {
       <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-teal-500/15 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 -left-32 w-[500px] h-[500px] rounded-full bg-lime-500/15 blur-3xl pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-20 grid lg:grid-cols-12 gap-12 items-center">
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-14 sm:py-20 grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
         <div className="lg:col-span-8">
-          <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 text-xs sm:text-sm font-medium tracking-wide">
+          <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/15 text-[11px] sm:text-sm font-medium tracking-wide">
             <span className="relative grid place-items-center">
               <span className="absolute inset-0 rounded-full bg-lime-400 animate-ping2" />
               <span className="w-2 h-2 rounded-full bg-lime-400 relative" />
             </span>
             NCR-Based Fleet Operator · Pan-India Linehaul
           </div>
-          <h1 className="mt-8 text-5xl sm:text-6xl lg:text-7xl leading-[1.02] font-extrabold tracking-tight drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]">
+          <h1 className="mt-6 sm:mt-8 text-[2.25rem] leading-[1.05] sm:text-5xl sm:leading-[1.02] md:text-6xl lg:text-7xl font-extrabold tracking-tight drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]">
             Dedicated Fleet
             <br />
             <span className="bg-gradient-to-r from-teal-400 via-forest-400 to-lime-400 bg-clip-text text-transparent">
@@ -314,26 +314,26 @@ function Hero() {
             </span>{" "}
             Across India
           </h1>
-          <p className="mt-7 text-lg sm:text-xl leading-9 text-white/85 max-w-2xl">
+          <p className="mt-5 sm:mt-7 text-base sm:text-lg md:text-xl leading-7 sm:leading-9 text-white/85 max-w-2xl">
             TransVigo Logistics delivers disciplined line-haul movement, fixed-lane fleet deployment,
             inter-hub transportation and time-bound dispatch across major industrial corridors.
           </p>
-          <div className="mt-9 flex flex-wrap gap-4">
+          <div className="mt-7 sm:mt-9 flex flex-wrap gap-3 sm:gap-4">
             <a
               href="#contact"
-              className="group inline-flex items-center gap-2 bg-lime-500 hover:bg-lime-400 transition text-navy-900 font-bold px-7 py-4 rounded-2xl text-base shadow-2xl"
+              className="group inline-flex items-center gap-2 bg-lime-500 hover:bg-lime-400 transition text-navy-900 font-bold px-5 sm:px-7 py-3.5 sm:py-4 rounded-2xl text-sm sm:text-base shadow-2xl"
             >
               Get Freight Quote
               <ArrowRight size={18} strokeWidth={2.6} className="group-hover:translate-x-0.5 transition" />
             </a>
             <a
               href="#fleet"
-              className="inline-flex items-center gap-2 border border-white/30 hover:bg-white/10 backdrop-blur transition px-7 py-4 rounded-2xl text-base font-semibold"
+              className="inline-flex items-center gap-2 border border-white/30 hover:bg-white/10 backdrop-blur transition px-5 sm:px-7 py-3.5 sm:py-4 rounded-2xl text-sm sm:text-base font-semibold"
             >
               Attach Your Vehicle
             </a>
           </div>
-          <div className="mt-12 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-white/80">
+          <div className="mt-8 sm:mt-12 flex flex-wrap items-center gap-x-5 sm:gap-x-7 gap-y-2 sm:gap-y-3 text-xs sm:text-sm text-white/80">
             <span className="inline-flex items-center gap-2"><CheckCircle2 size={16} className="text-lime-400" /> GPS on every trip</span>
             <span className="inline-flex items-center gap-2"><CheckCircle2 size={16} className="text-lime-400" /> EWB &amp; FASTag compliant</span>
             <span className="inline-flex items-center gap-2"><CheckCircle2 size={16} className="text-lime-400" /> On-time placement SLAs</span>
@@ -341,16 +341,16 @@ function Hero() {
         </div>
 
         {/* Hero stats row */}
-        <div className="lg:col-span-12 mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="lg:col-span-12 mt-2 sm:mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           {heroStats.map(([num, label]) => (
             <div
               key={label}
-              className="bg-white/10 backdrop-blur-xl border border-white/15 px-5 py-5 rounded-2xl"
+              className="bg-white/10 backdrop-blur-xl border border-white/15 px-4 py-4 sm:px-5 sm:py-5 rounded-2xl"
             >
-              <div className="text-3xl font-extrabold bg-gradient-to-r from-teal-400 via-forest-400 to-lime-400 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-teal-400 via-forest-400 to-lime-400 bg-clip-text text-transparent">
                 {num}
               </div>
-              <div className="mt-1.5 text-sm text-white/75">{label}</div>
+              <div className="mt-1 sm:mt-1.5 text-xs sm:text-sm text-white/75">{label}</div>
             </div>
           ))}
         </div>
@@ -361,17 +361,17 @@ function Hero() {
 
 function PartnersMarquee() {
   return (
-    <section className="bg-white border-y border-navy-100 py-7">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-xs uppercase tracking-[0.28em] font-bold text-navy-400 text-center mb-5">
+    <section className="bg-white border-y border-navy-100 py-6 sm:py-7">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-[10px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.28em] font-bold text-navy-400 text-center mb-4 sm:mb-5">
           Trusted by industrial leaders across India
         </div>
         <div className="fade-mask overflow-hidden">
-          <div className="flex gap-12 animate-marquee w-max">
+          <div className="flex gap-8 sm:gap-12 animate-marquee w-max">
             {[...partners, ...partners].map((p, i) => (
               <span
                 key={`${p}-${i}`}
-                className="text-navy-700/70 hover:text-navy-800 transition font-bold text-lg tracking-wider whitespace-nowrap"
+                className="text-navy-700/70 hover:text-navy-800 transition font-bold text-base sm:text-lg tracking-wider whitespace-nowrap"
               >
                 {p.toUpperCase()}
               </span>
@@ -385,15 +385,15 @@ function PartnersMarquee() {
 
 function About() {
   return (
-    <section id="about" className="max-w-7xl mx-auto px-6 lg:px-8 -mt-14 relative z-20">
-      <div className="bg-white rounded-[36px] shadow-soft border border-navy-100 p-8 lg:p-12 grid lg:grid-cols-3 gap-10">
+    <section id="about" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-14 relative z-20">
+      <div className="bg-white rounded-3xl sm:rounded-[36px] shadow-soft border border-navy-100 p-6 sm:p-8 lg:p-12 grid lg:grid-cols-3 gap-6 sm:gap-10">
         <div>
           <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">About TransVigo</div>
-          <h2 className="mt-4 text-3xl lg:text-4xl font-extrabold leading-tight text-navy-900">
+          <h2 className="mt-3 sm:mt-4 text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight text-navy-900">
             Reliable Fleet Movement With Operational Discipline
           </h2>
         </div>
-        <div className="lg:col-span-2 text-lg text-navy-600 leading-9">
+        <div className="lg:col-span-2 text-base sm:text-lg text-navy-600 leading-7 sm:leading-9">
           TransVigo Logistics specializes in line-haul transportation, dedicated fleet deployment, inter-hub
           movement and fixed-route dispatch operations. Our focus is assured vehicle placement, route discipline,
           GPS visibility and scalable fleet execution for factories, warehouses and logistics partners across India.
@@ -415,14 +415,14 @@ function About() {
 
 function Services() {
   return (
-    <section id="services" className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
-      <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-8 mb-14">
+    <section id="services" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 sm:gap-8 mb-10 sm:mb-14">
         <div className="max-w-2xl">
           <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">Services</div>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-navy-900">
+          <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-navy-900">
             Core Transport Services
           </h2>
-          <p className="mt-4 text-lg text-navy-500 leading-8">
+          <p className="mt-3 sm:mt-4 text-base sm:text-lg text-navy-500 leading-7 sm:leading-8">
             Purpose-built transport operations for industrial movement, dedicated lanes and high-volume dispatch
             support.
           </p>
@@ -478,19 +478,19 @@ function Services() {
 
 function Fleet() {
   return (
-    <section id="fleet" className="relative py-24 bg-navy-50/60 border-y border-navy-100">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <section id="fleet" className="relative py-16 sm:py-24 bg-navy-50/60 border-y border-navy-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
           <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">Fleet</div>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-navy-900">
+          <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-navy-900">
             Right Vehicle. Right Lane. Right Time.
           </h2>
-          <p className="mt-4 text-lg text-navy-500 leading-8">
+          <p className="mt-3 sm:mt-4 text-base sm:text-lg text-navy-500 leading-7 sm:leading-8">
             Owned and attached fleet ranging from last-mile pickups to 40 ft trailers — matched to your cargo profile
             and route economics.
           </p>
         </div>
-        <div className="mt-12 grid sm:grid-cols-2 gap-5">
+        <div className="mt-8 sm:mt-12 grid sm:grid-cols-2 gap-4 sm:gap-5">
           {fleet.map((v) => (
             <div
               key={v.type}
@@ -606,42 +606,42 @@ function HubSpokeMap() {
 
 function Routes() {
   return (
-    <section id="routes" className="relative bg-gradient-to-br from-navy-800 via-navy-700 to-navy-900 text-white py-24 overflow-hidden">
+    <section id="routes" className="relative bg-gradient-to-br from-navy-800 via-navy-700 to-navy-900 text-white py-16 sm:py-24 overflow-hidden">
       <div className="absolute inset-0 bg-grid opacity-25 pointer-events-none" />
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/20 blur-3xl rounded-full" />
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-14 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
         <div>
           <div className="text-lime-400 font-bold uppercase tracking-[0.22em] text-xs">Operational Network</div>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold leading-tight">
-            Major Line-Haul & Fixed Route Corridors
+          <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
+            Major Line-Haul &amp; Fixed Route Corridors
           </h2>
-          <p className="mt-5 text-white/70 text-lg leading-8 max-w-xl">
+          <p className="mt-4 sm:mt-5 text-white/70 text-base sm:text-lg leading-7 sm:leading-8 max-w-xl">
             From the NCR hub we operate scheduled and on-demand linehaul to India's busiest industrial,
             consumption and port corridors — with consistent placement KPIs.
           </p>
 
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="mt-6 sm:mt-8 grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
             {corridors.map((c) => (
               <div
                 key={c.name}
-                className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 backdrop-blur"
+                className="bg-white/5 border border-white/10 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 backdrop-blur"
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold">NCR ⇄ {c.name}</span>
-                  <span className="text-[10px] font-bold text-lime-400">{c.code}</span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs sm:text-sm font-bold truncate">NCR ⇄ {c.name}</span>
+                  <span className="text-[10px] font-bold text-lime-400 shrink-0">{c.code}</span>
                 </div>
                 <div className="mt-1 text-[11px] text-white/55 font-semibold">{c.distance}</div>
               </div>
             ))}
           </div>
 
-          <div className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white/80">
+          <div className="mt-6 sm:mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white/80">
             <Globe2 size={16} className="text-teal-400" /> Open to lane requests — Pan-India
           </div>
         </div>
 
-        <div className="relative">
+        <div className="relative order-first lg:order-none">
           <HubSpokeMap />
         </div>
       </div>
@@ -651,27 +651,27 @@ function Routes() {
 
 function Capabilities() {
   return (
-    <section className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <section className="py-16 sm:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
-          <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">Tech & Compliance</div>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-navy-900">
+          <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">Tech &amp; Compliance</div>
+          <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-navy-900">
             A Control Tower Built for Linehaul
           </h2>
-          <p className="mt-4 text-lg text-navy-500 leading-8">
+          <p className="mt-3 sm:mt-4 text-base sm:text-lg text-navy-500 leading-7 sm:leading-8">
             Visibility, compliance and exception management — embedded into every trip we run.
           </p>
         </div>
 
-        <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="mt-8 sm:mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {capabilities.map(({ title, text, Icon }) => (
             <div
               key={title}
-              className="relative rounded-3xl p-7 bg-navy-800 text-white overflow-hidden shadow-soft"
+              className="relative rounded-3xl p-6 sm:p-7 bg-navy-800 text-white overflow-hidden shadow-soft"
             >
               <div className="absolute -right-10 -top-10 h-32 w-32 bg-teal-500/20 rounded-full blur-2xl" />
               <Icon size={28} className="text-lime-400" strokeWidth={2.2} />
-              <div className="mt-6 text-lg font-extrabold">{title}</div>
+              <div className="mt-5 sm:mt-6 text-lg font-extrabold">{title}</div>
               <p className="mt-2 text-white/65 text-sm leading-6">{text}</p>
             </div>
           ))}
@@ -683,18 +683,18 @@ function Capabilities() {
 
 function Process() {
   return (
-    <section id="process" className="py-24 bg-navy-50/60 border-y border-navy-100">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <section id="process" className="py-16 sm:py-24 bg-navy-50/60 border-y border-navy-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
           <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">How it works</div>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-navy-900">
+          <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-navy-900">
             From Booking to Proof of Delivery
           </h2>
         </div>
-        <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="mt-8 sm:mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {process.map(({ step, title, text, Icon }, i) => (
             <div key={step} className="relative">
-              <div className="bg-white rounded-3xl p-7 border border-navy-100 shadow-soft h-full">
+              <div className="bg-white rounded-3xl p-6 sm:p-7 border border-navy-100 shadow-soft h-full">
                 <div className="flex items-center justify-between">
                   <span className="text-5xl font-extrabold text-navy-100">{step}</span>
                   <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-teal-500 via-forest-500 to-lime-500 grid place-items-center text-white">
@@ -705,10 +705,9 @@ function Process() {
                 <p className="mt-2 text-navy-500 text-sm leading-6">{text}</p>
               </div>
               {i < process.length - 1 && (
-                <ArrowRight
-                  className="hidden lg:block absolute top-1/2 -right-4 -translate-y-1/2 text-navy-300"
-                  size={28}
-                />
+                <div className="hidden lg:flex absolute top-1/2 -right-5 -translate-y-1/2 h-10 w-10 rounded-full bg-white border border-navy-100 shadow-soft items-center justify-center z-10">
+                  <ArrowRight className="text-teal-600" size={20} strokeWidth={3} />
+                </div>
               )}
             </div>
           ))}
@@ -720,26 +719,26 @@ function Process() {
 
 function Industries() {
   return (
-    <section id="industries" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+    <section id="industries" className="py-16 sm:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8 sm:mb-12">
           <div className="max-w-2xl">
             <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">Industries Served</div>
-            <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold text-navy-900">
+            <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-navy-900">
               Sectors We Move Every Day
             </h2>
           </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
           {industries.map(({ label, Icon }) => (
             <div
               key={label}
-              className="group flex items-center gap-4 bg-navy-50/70 hover:bg-white rounded-2xl p-5 border border-navy-100 hover:border-teal-200 hover:shadow-soft transition"
+              className="group flex items-center gap-3 sm:gap-4 bg-navy-50/70 hover:bg-white rounded-2xl p-4 sm:p-5 border border-navy-100 hover:border-teal-200 hover:shadow-soft transition"
             >
-              <div className="h-12 w-12 rounded-xl bg-white text-teal-600 grid place-items-center border border-navy-100 group-hover:bg-teal-500 group-hover:text-white transition">
-                <Icon size={22} strokeWidth={2.2} />
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-white text-teal-600 grid place-items-center border border-navy-100 group-hover:bg-teal-500 group-hover:text-white transition shrink-0">
+                <Icon size={20} strokeWidth={2.2} />
               </div>
-              <span className="font-bold text-navy-800">{label}</span>
+              <span className="font-bold text-sm sm:text-base text-navy-800">{label}</span>
             </div>
           ))}
         </div>
@@ -757,16 +756,16 @@ function StatsBand() {
   ];
   return (
     <section className="relative">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 -mt-12 mb-0">
-        <div className="bg-gradient-to-r from-navy-800 to-navy-700 rounded-[32px] p-8 lg:p-10 shadow-soft grid grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-12 mb-0">
+        <div className="bg-gradient-to-r from-navy-800 to-navy-700 rounded-3xl sm:rounded-[32px] p-6 sm:p-8 lg:p-10 shadow-soft grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {items.map(({ num, label, Icon }) => (
-            <div key={label} className="flex items-center gap-4">
-              <div className="h-14 w-14 rounded-2xl bg-white/10 grid place-items-center text-lime-400">
-                <Icon size={24} strokeWidth={2.2} />
+            <div key={label} className="flex items-center gap-3 sm:gap-4">
+              <div className="h-11 w-11 sm:h-14 sm:w-14 rounded-2xl bg-white/10 grid place-items-center text-lime-400 shrink-0">
+                <Icon size={22} strokeWidth={2.2} />
               </div>
-              <div>
-                <div className="text-3xl font-extrabold text-white">{num}</div>
-                <div className="text-white/65 text-sm font-semibold">{label}</div>
+              <div className="min-w-0">
+                <div className="text-2xl sm:text-3xl font-extrabold text-white">{num}</div>
+                <div className="text-white/65 text-xs sm:text-sm font-semibold">{label}</div>
               </div>
             </div>
           ))}
@@ -780,16 +779,16 @@ function Founder() {
   return (
     <section
       id="founder"
-      className="relative py-24 overflow-hidden text-white bg-gradient-to-br from-navy-800 via-navy-700 to-navy-900"
+      className="relative py-16 sm:py-24 overflow-hidden text-white bg-gradient-to-br from-navy-800 via-navy-700 to-navy-900"
     >
       {/* Grid + brand-color glows — moved here from the old hero */}
       <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
       <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-teal-500/20 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 -left-32 w-[500px] h-[500px] rounded-full bg-lime-500/15 blur-3xl pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-12 gap-14 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-12 lg:gap-14 items-center">
         {/* Portrait */}
-        <div className="lg:col-span-5 relative">
+        <div className="lg:col-span-5 relative max-w-md mx-auto w-full lg:max-w-none lg:mx-0">
           <div
             className="absolute -top-6 -left-6 h-40 w-40 rounded-3xl opacity-40 blur-xl"
             style={{ background: "linear-gradient(135deg,#74C13F,#2BBED9)" }}
@@ -833,7 +832,7 @@ function Founder() {
           <div className="text-lime-400 font-bold uppercase tracking-[0.22em] text-xs">
             From the Founder
           </div>
-          <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold leading-tight">
+          <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
             A promise to{" "}
             <span
               className="bg-clip-text text-transparent"
@@ -848,11 +847,11 @@ function Founder() {
           </h2>
 
           <Quote
-            size={44}
-            className="mt-8 text-teal-400/50"
+            size={40}
+            className="mt-6 sm:mt-8 text-teal-400/50"
             strokeWidth={1.6}
           />
-          <blockquote className="mt-2 text-lg lg:text-xl text-white/85 leading-9 max-w-2xl">
+          <blockquote className="mt-2 text-base sm:text-lg lg:text-xl text-white/85 leading-7 sm:leading-9 max-w-2xl">
             TransVigo was built around one belief — that India's industrial
             corridors deserve linehaul partners who are accountable to the load,
             not just the rate. Every truck we attach, every lane we open and
@@ -860,34 +859,34 @@ function Founder() {
             operations, transparent tracking, and on-time delivery</em>.
           </blockquote>
 
-          <div className="mt-8 flex items-center gap-4">
+          <div className="mt-6 sm:mt-8 flex items-center gap-3 sm:gap-4">
             <div
-              className="h-12 w-12 rounded-full grid place-items-center text-navy-900 font-extrabold"
+              className="h-11 w-11 sm:h-12 sm:w-12 rounded-full grid place-items-center text-navy-900 font-extrabold shrink-0"
               style={{ background: "linear-gradient(135deg,#2BBED9,#74C13F)" }}
             >
               TV
             </div>
-            <div>
-              <div className="text-lg font-extrabold">
+            <div className="min-w-0">
+              <div className="text-base sm:text-lg font-extrabold">
                 Founder, TransVigo Logistics
               </div>
-              <div className="text-sm text-white/65 font-semibold">
+              <div className="text-xs sm:text-sm text-white/65 font-semibold">
                 NCR · India · {new Date().getFullYear()}
               </div>
             </div>
           </div>
 
-          <div className="mt-10 grid grid-cols-3 gap-6 max-w-lg">
+          <div className="mt-8 sm:mt-10 grid grid-cols-3 gap-3 sm:gap-6 max-w-lg">
             {[
               ["20+", "Years in Industry"],
               ["200+", "Vehicles Managed"],
               ["10+", "Sectors Served"],
             ].map(([num, label]) => (
-              <div key={label} className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur">
-                <div className="text-3xl font-extrabold bg-gradient-to-r from-teal-400 via-forest-400 to-lime-400 bg-clip-text text-transparent">
+              <div key={label} className="bg-white/5 border border-white/10 rounded-2xl p-3 sm:p-4 backdrop-blur">
+                <div className="text-xl sm:text-3xl font-extrabold bg-gradient-to-r from-teal-400 via-forest-400 to-lime-400 bg-clip-text text-transparent">
                   {num}
                 </div>
-                <div className="mt-1 text-[11px] font-bold uppercase tracking-wider text-white/60">
+                <div className="mt-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-white/60">
                   {label}
                 </div>
               </div>
@@ -918,56 +917,56 @@ function Founder() {
 
 function Contact() {
   return (
-    <section id="contact" className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
-      <div className="relative rounded-[40px] bg-gradient-to-br from-navy-800 via-navy-700 to-navy-900 text-white p-8 lg:p-14 overflow-hidden">
+    <section id="contact" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <div className="relative rounded-3xl sm:rounded-[40px] bg-gradient-to-br from-navy-800 via-navy-700 to-navy-900 text-white p-6 sm:p-8 lg:p-14 overflow-hidden">
         <div className="absolute inset-0 bg-grid opacity-25 pointer-events-none" />
         <div className="absolute -right-20 -top-20 w-80 h-80 bg-lime-500/20 blur-3xl rounded-full" />
         <div className="absolute -left-10 bottom-0 w-72 h-72 bg-teal-500/20 blur-3xl rounded-full" />
 
-        <div className="relative grid lg:grid-cols-2 gap-12 items-start">
+        <div className="relative grid lg:grid-cols-2 gap-10 lg:gap-12 items-start">
           <div>
             <div className="text-lime-400 uppercase tracking-[0.22em] font-bold text-xs">Contact Us</div>
-            <h2 className="mt-3 text-4xl lg:text-5xl font-extrabold leading-tight">
+            <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
               Need Dedicated Vehicles On Fixed Routes?
             </h2>
-            <p className="mt-5 text-lg text-white/75 leading-9 max-w-xl">
+            <p className="mt-4 sm:mt-5 text-base sm:text-lg text-white/75 leading-7 sm:leading-9 max-w-xl">
               Connect with TransVigo Logistics for daily vehicle placement, inter-hub transportation and scalable
               fleet operations.
             </p>
 
-            <div className="mt-8 space-y-3">
+            <div className="mt-6 sm:mt-8 space-y-3">
               <a
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 bg-lime-500 hover:bg-lime-400 text-navy-900 font-bold px-5 py-4 rounded-2xl w-fit transition"
+                className="flex items-center gap-3 bg-lime-500 hover:bg-lime-400 text-navy-900 font-bold px-4 sm:px-5 py-3 sm:py-4 rounded-2xl w-fit max-w-full transition text-sm sm:text-base"
               >
-                <MessageCircle size={20} /> Chat on WhatsApp
+                <MessageCircle size={20} className="shrink-0" /> Chat on WhatsApp
               </a>
               <a
                 href={MAILTO}
-                className="flex items-center gap-3 bg-white/10 hover:bg-white/15 backdrop-blur border border-white/15 text-white font-semibold px-5 py-4 rounded-2xl w-fit transition"
+                className="flex items-center gap-3 bg-white/10 hover:bg-white/15 backdrop-blur border border-white/15 text-white font-semibold px-4 sm:px-5 py-3 sm:py-4 rounded-2xl w-fit max-w-full transition text-sm sm:text-base break-all"
               >
-                <Mail size={20} /> {EMAIL}
+                <Mail size={20} className="shrink-0" /> {EMAIL}
               </a>
               <a
                 href={`tel:${PHONE_PRIMARY_TEL}`}
-                className="flex items-center gap-3 bg-white/10 hover:bg-white/15 backdrop-blur border border-white/15 text-white font-semibold px-5 py-4 rounded-2xl w-fit transition"
+                className="flex items-center gap-3 bg-white/10 hover:bg-white/15 backdrop-blur border border-white/15 text-white font-semibold px-4 sm:px-5 py-3 sm:py-4 rounded-2xl w-fit max-w-full transition text-sm sm:text-base"
               >
-                <Phone size={20} /> {PHONE_PRIMARY}
+                <Phone size={20} className="shrink-0" /> {PHONE_PRIMARY}
               </a>
               <a
                 href={`tel:${PHONE_SECONDARY_TEL}`}
-                className="flex items-center gap-3 bg-white/10 hover:bg-white/15 backdrop-blur border border-white/15 text-white font-semibold px-5 py-4 rounded-2xl w-fit transition"
+                className="flex items-center gap-3 bg-white/10 hover:bg-white/15 backdrop-blur border border-white/15 text-white font-semibold px-4 sm:px-5 py-3 sm:py-4 rounded-2xl w-fit max-w-full transition text-sm sm:text-base"
               >
-                <Phone size={20} /> {PHONE_SECONDARY}
+                <Phone size={20} className="shrink-0" /> {PHONE_SECONDARY}
               </a>
             </div>
 
-            <div className="mt-10">
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
+            <div className="mt-8 sm:mt-10">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-5">
                 <div className="text-xs font-bold uppercase tracking-wider text-lime-400">Operational Office</div>
-                <div className="mt-1.5 text-white font-bold flex items-start gap-2">
+                <div className="mt-1.5 text-white font-bold text-sm sm:text-base flex items-start gap-2">
                   <MapPin size={16} className="mt-1 shrink-0 text-teal-400" />
                   <span>{OFFICE_ADDRESS}</span>
                 </div>
@@ -975,32 +974,32 @@ function Contact() {
             </div>
           </div>
 
-          <div className="bg-white text-navy-900 rounded-[28px] p-8 lg:p-10 shadow-2xl">
-            <h3 className="text-2xl font-extrabold">Request a Callback</h3>
+          <div className="bg-white text-navy-900 rounded-3xl sm:rounded-[28px] p-6 sm:p-8 lg:p-10 shadow-2xl">
+            <h3 className="text-xl sm:text-2xl font-extrabold">Request a Callback</h3>
             <p className="mt-1 text-navy-500 text-sm">Share your requirement — our team responds within hours.</p>
             <form
-              className="mt-6 space-y-4"
+              className="mt-5 sm:mt-6 space-y-3 sm:space-y-4"
               onSubmit={(e) => {
                 e.preventDefault();
                 alert("Thanks — TransVigo will reach out shortly.");
               }}
             >
-              <div className="grid sm:grid-cols-2 gap-4">
-                <input required placeholder="Company Name" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
-                <input required placeholder="Contact Person" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
+              <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
+                <input required placeholder="Company Name" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
+                <input required placeholder="Contact Person" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
               </div>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <input required placeholder="Origin (City)" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
-                <input required placeholder="Destination (City)" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
+              <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
+                <input required placeholder="Origin (City)" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
+                <input required placeholder="Destination (City)" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
               </div>
-              <input required placeholder="Vehicle Requirement (e.g. 32 ft SXL × 4)" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
-              <div className="grid sm:grid-cols-2 gap-4">
-                <input required type="tel" placeholder="Mobile" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
-                <input type="email" placeholder="Email" className="w-full border border-navy-100 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-teal-500 transition" />
+              <input required placeholder="Vehicle Requirement (e.g. 32 ft SXL × 4)" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
+              <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
+                <input required type="tel" placeholder="Mobile" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
+                <input type="email" placeholder="Email" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
               </div>
               <button
                 type="submit"
-                className="w-full inline-flex items-center justify-center gap-2 bg-lime-500 hover:bg-lime-400 transition text-navy-900 py-4 rounded-2xl font-bold text-base shadow-soft"
+                className="w-full inline-flex items-center justify-center gap-2 bg-lime-500 hover:bg-lime-400 transition text-navy-900 py-3.5 sm:py-4 rounded-2xl font-bold text-sm sm:text-base shadow-soft"
               >
                 Request Callback <ArrowRight size={18} strokeWidth={2.6} />
               </button>
@@ -1015,8 +1014,8 @@ function Contact() {
 function Footer() {
   return (
     <footer className="bg-navy-900 text-white/80">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 grid lg:grid-cols-12 gap-10">
-        <div className="lg:col-span-5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 grid lg:grid-cols-12 gap-8 sm:gap-10">
+        <div className="lg:col-span-4">
           <Logo inverse />
           <p className="mt-6 text-white/65 leading-8 max-w-md">
             TransVigo Logistics — disciplined linehaul, dedicated fleet and inter-hub transportation across India's
@@ -1048,10 +1047,10 @@ function Footer() {
           </ul>
         </div>
 
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-3">
           <h4 className="text-white font-bold mb-4 text-sm tracking-wider uppercase">Network</h4>
-          <ul className="space-y-2 text-sm">
-            {corridors.slice(0, 6).map((c) => (
+          <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+            {corridors.map((c) => (
               <li key={c.name}>
                 <a href="#routes" className="hover:text-lime-400 transition">NCR ⇄ {c.name}</a>
               </li>
