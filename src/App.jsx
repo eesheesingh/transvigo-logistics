@@ -361,7 +361,7 @@ function Hero() {
 
 function PartnersMarquee() {
   return (
-    <section className="bg-white border-y border-navy-100 py-6 sm:py-7">
+    <section className="relative z-10 bg-white border-y border-navy-100 py-6 sm:py-7">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-[10px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.28em] font-bold text-navy-400 text-center mb-4 sm:mb-5">
           Trusted by industrial leaders across India
@@ -385,7 +385,7 @@ function PartnersMarquee() {
 
 function About() {
   return (
-    <section id="about" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-14 relative z-20">
+    <section id="about" className="relative z-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
       <div className="bg-white rounded-3xl sm:rounded-[36px] shadow-soft border border-navy-100 p-6 sm:p-8 lg:p-12 grid lg:grid-cols-3 gap-6 sm:gap-10">
         <div>
           <div className="text-teal-600 font-bold uppercase tracking-[0.22em] text-xs">About TransVigo</div>
