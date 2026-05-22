@@ -879,7 +879,7 @@ function Founder() {
           <div className="mt-8 sm:mt-10 grid grid-cols-3 gap-3 sm:gap-6 max-w-lg">
             {[
               ["20+", "Years in Industry"],
-              ["200+", "Vehicles Managed"],
+              ["125+", "Vehicles Managed"],
               ["10+", "Sectors Served"],
             ].map(([num, label]) => (
               <div key={label} className="bg-white/5 border border-white/10 rounded-2xl p-3 sm:p-4 backdrop-blur">
