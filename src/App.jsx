@@ -800,7 +800,7 @@ function Founder() {
 
           <div className="relative rounded-[32px] overflow-hidden border border-white/15 bg-white/5 backdrop-blur shadow-2xl">
             <img
-              src="/founder.jpeg"
+              src="/founder.png"
               alt="Founder, TransVigo Logistics"
               className="w-full aspect-[4/5] object-cover"
               draggable={false}
