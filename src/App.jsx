@@ -821,7 +821,7 @@ function Founder() {
                 Founder &amp; Managing Director
               </div>
               <div className="text-base font-extrabold text-navy-900">
-                Raman Sehrawat
+              Davender Pal Sehrawat 
               </div>
             </div>
           </div>
