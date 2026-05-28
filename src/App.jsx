@@ -1037,21 +1037,44 @@ function Contact() {
               className="mt-5 sm:mt-6 space-y-3 sm:space-y-4"
               onSubmit={(e) => {
                 e.preventDefault();
-                alert("Thanks — TransVigo will reach out shortly.");
+                const data = new FormData(e.currentTarget);
+                const get = (k) => (data.get(k) || "").toString().trim();
+                const company = get("company");
+                const person = get("person");
+                const origin = get("origin");
+                const destination = get("destination");
+                const vehicle = get("vehicle");
+                const mobile = get("mobile");
+                const email = get("email");
+                const subject = `Callback Request — ${company} (${origin} → ${destination})`;
+                const body = [
+                  "New callback request from transvigo.com",
+                  "",
+                  `Company:       ${company}`,
+                  `Contact:       ${person}`,
+                  `Mobile:        ${mobile}`,
+                  `Email:         ${email || "—"}`,
+                  `Origin:        ${origin}`,
+                  `Destination:   ${destination}`,
+                  `Requirement:   ${vehicle}`,
+                ].join("\n");
+                window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(
+                  subject
+                )}&body=${encodeURIComponent(body)}`;
               }}
             >
               <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
-                <input required placeholder="Company Name" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
-                <input required placeholder="Contact Person" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
+                <input required name="company" placeholder="Company Name" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
+                <input required name="person" placeholder="Contact Person" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
               </div>
               <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
-                <input required placeholder="Origin (City)" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
-                <input required placeholder="Destination (City)" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
+                <input required name="origin" placeholder="Origin (City)" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
+                <input required name="destination" placeholder="Destination (City)" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
               </div>
-              <input required placeholder="Vehicle Requirement (e.g. 32 ft SXL × 4)" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
+              <input required name="vehicle" placeholder="Vehicle Requirement (e.g. 32 ft SXL × 4)" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
               <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
-                <input required type="tel" placeholder="Mobile" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
-                <input type="email" placeholder="Email" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
+                <input required name="mobile" type="tel" placeholder="Mobile" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
+                <input name="email" type="email" placeholder="Email" className="w-full border border-navy-100 rounded-2xl px-4 py-3 sm:py-3.5 focus:outline-none focus:border-teal-500 transition text-sm sm:text-base" />
               </div>
               <button
                 type="submit"
