@@ -59,7 +59,7 @@ const navLinks = [
 ];
 
 const heroStats = [
-  ["200+", "GPS-Enabled Vehicles"],
+  ["125+", "GPS-Enabled Vehicles"],
   ["20+", "Years Experience"],
   ["24×7", "Fleet Monitoring"],
   ["Pan-India", "Operational Reach"],
@@ -158,20 +158,74 @@ const industries = [
   { label: "Retail & D2C", Icon: Package },
 ];
 
-const partners = [
-  "Reliance",
-  "Tata Steel",
-  "Asian Paints",
-  "Hindustan Unilever",
-  "ITC",
-  "Maruti Suzuki",
-  "Mondelez",
-  "Bosch",
-  "Castrol",
-  "JK Tyre",
-  "Dabur",
-  "Britannia",
-];
+// const partners = [
+//   "Reliance",
+//   "Tata Steel",
+//   "Asian Paints",
+//   "Hindustan Unilever",
+//   "ITC",
+//   "Maruti Suzuki",
+//   "Mondelez",
+//   "Bosch",
+//   "Castrol",
+//   "JK Tyre",
+//   "Dabur",
+//   "Britannia",
+// ];
+
+function CountUp({ value, duration = 1.8, className }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, amount: 0.3 });
+  const [progress, setProgress] = useState(0);
+
+  const parsed = (() => {
+    const str = String(value);
+    const match = str.match(/^([\d,]+(?:\.\d+)?)([+%]?)$/);
+    if (!match) return null;
+    const numStr = match[1];
+    const suffix = match[2];
+    const hasComma = numStr.includes(",");
+    const cleaned = numStr.replace(/,/g, "");
+    const target = parseFloat(cleaned);
+    if (isNaN(target)) return null;
+    const dotIdx = cleaned.indexOf(".");
+    const decimals = dotIdx >= 0 ? cleaned.length - dotIdx - 1 : 0;
+    return { target, suffix, decimals, hasComma };
+  })();
+
+  useEffect(() => {
+    if (!inView || !parsed) return;
+    let raf;
+    const start = performance.now();
+    const tick = (now) => {
+      const t = Math.min((now - start) / (duration * 1000), 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setProgress(eased);
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, parsed?.target, duration]);
+
+  if (!parsed) {
+    return <span ref={ref} className={className}>{value}</span>;
+  }
+
+  const current = parsed.target * progress;
+  const fixed = current.toFixed(parsed.decimals);
+  const formatted = parsed.hasComma
+    ? Number(fixed).toLocaleString("en-US", {
+        minimumFractionDigits: parsed.decimals,
+        maximumFractionDigits: parsed.decimals,
+      })
+    : fixed;
+
+  return (
+    <span ref={ref} className={className}>
+      {formatted}{parsed.suffix}
+    </span>
+  );
+}
 
 function Logo({ inverse = false }) {
   return (
@@ -348,7 +402,7 @@ function Hero() {
               className="bg-white/10 backdrop-blur-xl border border-white/15 px-4 py-4 sm:px-5 sm:py-5 rounded-2xl"
             >
               <div className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-teal-400 via-forest-400 to-lime-400 bg-clip-text text-transparent">
-                {num}
+                <CountUp value={num} />
               </div>
               <div className="mt-1 sm:mt-1.5 text-xs sm:text-sm text-white/75">{label}</div>
             </div>
@@ -359,29 +413,29 @@ function Hero() {
   );
 }
 
-function PartnersMarquee() {
-  return (
-    <section className="relative z-10 bg-white border-y border-navy-100 py-6 sm:py-7">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-[10px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.28em] font-bold text-navy-400 text-center mb-4 sm:mb-5">
-          Trusted by industrial leaders across India
-        </div>
-        <div className="fade-mask overflow-hidden">
-          <div className="flex gap-8 sm:gap-12 animate-marquee w-max">
-            {[...partners, ...partners].map((p, i) => (
-              <span
-                key={`${p}-${i}`}
-                className="text-navy-700/70 hover:text-navy-800 transition font-bold text-base sm:text-lg tracking-wider whitespace-nowrap"
-              >
-                {p.toUpperCase()}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+// function PartnersMarquee() {
+//   return (
+//     <section className="relative z-10 bg-white border-y border-navy-100 py-6 sm:py-7">
+//       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+//         <div className="text-[10px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.28em] font-bold text-navy-400 text-center mb-4 sm:mb-5">
+//           Trusted by industrial leaders across India
+//         </div>
+//         <div className="fade-mask overflow-hidden">
+//           <div className="flex gap-8 sm:gap-12 animate-marquee w-max">
+//             {[...partners, ...partners].map((p, i) => (
+//               <span
+//                 key={`${p}-${i}`}
+//                 className="text-navy-700/70 hover:text-navy-800 transition font-bold text-base sm:text-lg tracking-wider whitespace-nowrap"
+//               >
+//                 {p.toUpperCase()}
+//               </span>
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
 
 function About() {
   return (
@@ -486,7 +540,7 @@ function Fleet() {
             Right Vehicle. Right Lane. Right Time.
           </h2>
           <p className="mt-3 sm:mt-4 text-base sm:text-lg text-navy-500 leading-7 sm:leading-8">
-            Owned and attached fleet ranging from last-mile pickups to 40 ft trailers — matched to your cargo profile
+            Owned and attached fleet ranging from last-mile pickups to 32 ft trailers — matched to your cargo profile
             and route economics.
           </p>
         </div>
@@ -750,9 +804,9 @@ function Industries() {
 function StatsBand() {
   const items = [
     { num: "98.6%", label: "On-time placement", Icon: Timer },
-    { num: "200+", label: "GPS-enabled vehicles", Icon: Radar },
+    { num: "125+", label: "GPS-enabled vehicles", Icon: Radar },
     { num: "10+", label: "Industries served", Icon: Boxes },
-    { num: "5,000+", label: "Trips / month", Icon: Truck },
+    { num: "25,000+", label: "KM Everyday", Icon: Truck },
   ];
   return (
     <section className="relative">
@@ -764,7 +818,9 @@ function StatsBand() {
                 <Icon size={22} strokeWidth={2.2} />
               </div>
               <div className="min-w-0">
-                <div className="text-2xl sm:text-3xl font-extrabold text-white">{num}</div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-white">
+                  <CountUp value={num} />
+                </div>
                 <div className="text-white/65 text-xs sm:text-sm font-semibold">{label}</div>
               </div>
             </div>
@@ -884,7 +940,7 @@ function Founder() {
             ].map(([num, label]) => (
               <div key={label} className="bg-white/5 border border-white/10 rounded-2xl p-3 sm:p-4 backdrop-blur">
                 <div className="text-xl sm:text-3xl font-extrabold bg-gradient-to-r from-teal-400 via-forest-400 to-lime-400 bg-clip-text text-transparent">
-                  {num}
+                  <CountUp value={num} />
                 </div>
                 <div className="mt-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-white/60">
                   {label}
@@ -1141,7 +1197,7 @@ export default function App() {
       <div className="bg-white text-navy-900 min-h-screen">
         <Nav />
           <Reveal y={0} duration={0.9}><Hero /></Reveal>
-        <Reveal><PartnersMarquee /></Reveal>
+        {/* <Reveal><PartnersMarquee /></Reveal> */}
         <Reveal><About /></Reveal>
         <Reveal><Services /></Reveal>
         <Reveal><Fleet /></Reveal>
