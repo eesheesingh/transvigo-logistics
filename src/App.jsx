@@ -43,7 +43,7 @@ const PHONE_PRIMARY_TEL = "+919910044150";
 const PHONE_SECONDARY_TEL = "+919212634150";
 const OFFICE_ADDRESS =
   "Khasra No-7, Opp. Hanuman Mandir, N.H-8, Bilaspur Chowk, Gurugram, Haryana";
-const EMAIL = "info@transvigo.com";
+const EMAIL = "info@transvigo.in";
 const MAILTO = `mailto:${EMAIL}?subject=${encodeURIComponent(
   "Enquiry — TransVigo Logistics"
 )}`;
