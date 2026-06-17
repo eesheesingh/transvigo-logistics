@@ -1162,7 +1162,10 @@ function Footer() {
 
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between text-xs text-white/55 gap-2">
-          <span>© {new Date().getFullYear()} TransVigo Logistics. Moving Business Forward.</span>
+          <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            © {new Date().getFullYear()} TransVigo Logistics. Moving Business Forward.
+            <a href="/privacy" className="hover:text-lime-400 transition underline-offset-2 hover:underline">Privacy Policy</a>
+          </span>
           <span className="inline-flex items-center gap-2">
             <ShieldCheck size={14} className="text-teal-400" /> EWB · FASTag · MSME registered
           </span>
