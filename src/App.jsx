@@ -1165,6 +1165,7 @@ function Footer() {
           <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
             © {new Date().getFullYear()} TransVigo Logistics. Moving Business Forward.
             <a href="/privacy" className="hover:text-lime-400 transition underline-offset-2 hover:underline">Privacy Policy</a>
+            <a href="/account-deletion" className="hover:text-lime-400 transition underline-offset-2 hover:underline">Account &amp; Support</a>
           </span>
           <span className="inline-flex items-center gap-2">
             <ShieldCheck size={14} className="text-teal-400" /> EWB · FASTag · MSME registered
